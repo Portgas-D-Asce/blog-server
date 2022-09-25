@@ -6,4 +6,7 @@
   <select id="queryCategories" resultType="Category">
     select * from category 
   </select>
+  <select id="getCategoryById" resultType="Category">
+    select * from category where id = #{id}
+  </select>
 </mapper>

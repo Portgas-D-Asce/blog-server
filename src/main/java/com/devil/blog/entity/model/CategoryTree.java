@@ -39,4 +39,9 @@ public class CategoryTree {
     public void setChildren(List<CategoryTree> children) {
         this.children = children;
     }
+    @Override
+    public String toString() {
+        return "CategoryTree [children=" + children + ", description=" + description + ", id=" + id + ", name=" + name
+                + "]";
+    }
 }

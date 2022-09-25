@@ -88,4 +88,10 @@ public class Article {
     public void setDownvoted(int downvoted) {
         this.downvoted = downvoted;
     }
+    @Override
+    public String toString() {
+        return "Article [cid=" + cid + ", date=" + date + ", description=" + description + ", downvoted=" + downvoted
+                + ", id=" + id + ", name=" + name + ", path=" + path + ", read=" + read + ", tids=" + tids
+                + ", upvoted=" + upvoted + "]";
+    } 
 }

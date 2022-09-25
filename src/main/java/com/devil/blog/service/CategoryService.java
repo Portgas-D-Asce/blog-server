@@ -8,5 +8,6 @@ import com.devil.blog.entity.model.CategoryTree;
 
 public interface CategoryService {
     public CategoryTree getTree(int id);
-    public List<ArticleAbstract> getArticleAbstracts(int id);
+    public List<ArticleAbstract> getAbstracts(int id);
+    public Category getCategory(int id);
 }
