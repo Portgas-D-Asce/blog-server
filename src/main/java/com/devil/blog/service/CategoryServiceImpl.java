@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Category;
 import com.devil.blog.entity.Tag;
+import com.devil.blog.entity.TagArticle;
 import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.entity.model.CategoryTree;
 import com.devil.blog.mapper.ArticleMapper;
 import com.devil.blog.mapper.CategoryMapper;
+import com.devil.blog.mapper.TagArticleMapper;
 import com.devil.blog.mapper.TagMapper;
 
 @Service
@@ -28,6 +30,9 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Autowired
     private ArticleMapper articleMapper;
+
+    @Autowired
+    private TagArticleMapper tagArticleMapper;
 
     @Override
     public List<ArticleAbstract> getAbstracts(int id) {
@@ -67,9 +72,9 @@ public class CategoryServiceImpl implements CategoryService{
             articleAbstract.setUpvoted(article.getUpvoted());
             articleAbstract.setDownvoted(article.getDownvoted());
             articleAbstract.setTags(new ArrayList<>());
-            String[] tag_ids = article.getTids().split(",");
-            for(String tag_id : tag_ids) {
-                articleAbstract.getTags().add(hmp_tags.get(Integer.parseInt(tag_id)));
+            List<TagArticle> tagArticles = tagArticleMapper.getTags(article.getId());
+            for(TagArticle tagArticle : tagArticles) {
+                articleAbstract.getTags().add(hmp_tags.get(tagArticle.getTid()));
             }
             abstracts.add(articleAbstract);
         }

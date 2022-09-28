@@ -5,7 +5,6 @@ import java.util.Date;
 public class Article {
     private int id;
     private int cid;
-    private String tids;
     private String name;
     private String description;
     private String path;
@@ -15,11 +14,10 @@ public class Article {
     private int downvoted;
     public Article() {
     }
-    public Article(int id, int cid, String tids, String name, String description, String path, Date date, int read,
+    public Article(int id, int cid, String name, String description, String path, Date date, int read,
             int upvoted, int downvoted) {
         this.id = id;
         this.cid = cid;
-        this.tids = tids;
         this.name = name;
         this.description = description;
         this.path = path;
@@ -39,12 +37,6 @@ public class Article {
     }
     public void setCid(int cid) {
         this.cid = cid;
-    }
-    public String getTids() {
-        return tids;
-    }
-    public void setTids(String tids) {
-        this.tids = tids;
     }
     public String getName() {
         return name;
@@ -91,7 +83,7 @@ public class Article {
     @Override
     public String toString() {
         return "Article [cid=" + cid + ", date=" + date + ", description=" + description + ", downvoted=" + downvoted
-                + ", id=" + id + ", name=" + name + ", path=" + path + ", read=" + read + ", tids=" + tids
+                + ", id=" + id + ", name=" + name + ", path=" + path + ", read=" + read
                 + ", upvoted=" + upvoted + "]";
     } 
 }
