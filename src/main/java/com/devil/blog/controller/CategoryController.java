@@ -25,14 +25,14 @@ public class CategoryController {
         return category;
     }
 
-    @GetMapping(value = "/category-tree", produces = "application/json;charset=utf-8")
+    @GetMapping(value = "/category/tree", produces = "application/json;charset=utf-8")
     public CategoryTree getTree(int id) {
         System.out.println(id);
         CategoryTree tree = categoryService.getTree(id);
         return tree;
     }
 
-    @GetMapping(value = "/category-abstract", produces = "application/json;charset=utf-8")
+    @GetMapping(value = "/category/abstract", produces = "application/json;charset=utf-8")
     public List<ArticleAbstract> getAbstract(int id) {
         List<ArticleAbstract> abstracts = categoryService.getAbstracts(id);
         return abstracts;

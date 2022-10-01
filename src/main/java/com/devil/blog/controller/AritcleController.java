@@ -21,7 +21,7 @@ public class AritcleController {
         return article;
     }
 
-    @GetMapping(value = "/article-content", produces = "application/json;chatset=utf-8")
+    @GetMapping(value = "/article/content", produces = "application/json;chatset=utf-8")
     public String getContent(int id) {
         String content = articleService.getContent(id);
         return content;

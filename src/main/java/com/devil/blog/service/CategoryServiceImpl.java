@@ -12,29 +12,19 @@ import org.springframework.stereotype.Service;
 import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Category;
 import com.devil.blog.entity.Tag;
-import com.devil.blog.entity.TagArticle;
 import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.entity.model.CategoryTree;
 import com.devil.blog.mapper.ArticleMapper;
 import com.devil.blog.mapper.CategoryMapper;
-import com.devil.blog.mapper.TagArticleMapper;
-import com.devil.blog.mapper.TagMapper;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
     @Autowired
-    private TagMapper tagMapper;
-
-    @Autowired
     private ArticleMapper articleMapper;
 
-    @Autowired
-    private TagArticleMapper tagArticleMapper;
-
-    @Override
     public List<ArticleAbstract> getAbstracts(int id) {
         CategoryTree root = getTree(id);
         Queue<CategoryTree> que = new LinkedList<>();
@@ -50,16 +40,8 @@ public class CategoryServiceImpl implements CategoryService{
         }
         System.out.println(ids.toString());
 
-        List<Article> articles = articleMapper.getArticles(ids);
+        List<Article> articles = categoryMapper.getArticles(ids);
         System.out.println(articles.toString());
-
-
-        List<Tag> tags = tagMapper.queryTags();
-        System.out.println(tags.toString());
-        HashMap<Integer, Tag> hmp_tags = new HashMap<>();
-        for(Tag tag : tags) {
-            hmp_tags.put(tag.getId(), tag);
-        }
 
         List<ArticleAbstract> abstracts = new ArrayList<>();
         for(Article article : articles) {
@@ -71,11 +53,8 @@ public class CategoryServiceImpl implements CategoryService{
             articleAbstract.setRead(article.getRead());
             articleAbstract.setUpvoted(article.getUpvoted());
             articleAbstract.setDownvoted(article.getDownvoted());
-            articleAbstract.setTags(new ArrayList<>());
-            List<TagArticle> tagArticles = tagArticleMapper.getTags(article.getId());
-            for(TagArticle tagArticle : tagArticles) {
-                articleAbstract.getTags().add(hmp_tags.get(tagArticle.getTid()));
-            }
+            List<Tag> tags = articleMapper.getTags(article.getId());
+            articleAbstract.setTags(tags);
             abstracts.add(articleAbstract);
         }
         return abstracts;
@@ -83,13 +62,13 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Category getCategory(int id) {
-        Category category = categoryMapper.getCategoryById(id);
+        Category category = categoryMapper.getCategory(id);
         return category;
     }
 
     @Override
     public CategoryTree getTree(int id) {
-        List<Category> categories = categoryMapper.queryCategories();
+        List<Category> categories = categoryMapper.getCategories();
         CategoryTree root = null;
         HashMap<Integer, CategoryTree> hmp = new HashMap<>();
         for(Category category : categories) {
