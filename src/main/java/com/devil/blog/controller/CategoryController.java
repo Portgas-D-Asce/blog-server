@@ -19,20 +19,20 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService = new CategoryServiceImpl();
 
-    @GetMapping(value = "/category", produces = "application/json;charset=utf-8")
+    @GetMapping("/category")
     public Category getCategory(int id) {
         Category category = categoryService.getCategory(id);
         return category;
     }
 
-    @GetMapping(value = "/category/tree", produces = "application/json;charset=utf-8")
+    @GetMapping("/category/tree")
     public CategoryTree getTree(int id) {
         System.out.println(id);
         CategoryTree tree = categoryService.getTree(id);
         return tree;
     }
 
-    @GetMapping(value = "/category/abstract", produces = "application/json;charset=utf-8")
+    @GetMapping("/category/abstract")
     public List<ArticleAbstract> getAbstract(int id) {
         List<ArticleAbstract> abstracts = categoryService.getAbstracts(id);
         return abstracts;

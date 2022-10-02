@@ -18,13 +18,13 @@ public class TagController {
     @Autowired
     private TagService tagService = new TagServiceImpl();
 
-    @GetMapping(value = "/tag", produces = "application/json;charset=utf-8")
+    @GetMapping("/tag")
     public Tag getCategory(int id) {
         Tag tag = tagService.getTag(id);
         return tag;
     }
 
-    @GetMapping(value = "/tag/abstract", produces = "application/json;charset=utf-8")
+    @GetMapping("/tag/abstract")
     public List<ArticleAbstract> getAbstracts(int id) {
         List<ArticleAbstract> abstracts = tagService.getAbstracts(id);
         return abstracts;

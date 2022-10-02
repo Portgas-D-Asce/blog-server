@@ -15,13 +15,13 @@ public class AritcleController {
     @Autowired
     private ArticleService articleService = new ArticleServiceImpl();
 
-    @GetMapping(value = "/article", produces = "application/json;charset=utf-8")
+    @GetMapping("/article")
     public Article getArticle(int id) {
         Article article = articleService.getArticle(id);
         return article;
     }
 
-    @GetMapping(value = "/article/content", produces = "application/json;chatset=utf-8")
+    @GetMapping("/article/content")
     public String getContent(int id) {
         String content = articleService.getContent(id);
         return content;
