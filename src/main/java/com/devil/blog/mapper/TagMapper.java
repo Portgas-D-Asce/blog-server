@@ -11,6 +11,7 @@ import com.devil.blog.entity.Tag;
 @Mapper
 @Repository
 public interface TagMapper {
+    public List<Tag> getTags();
     public Tag getTag(int id);
     public List<Article> getArticles(int id);
 }

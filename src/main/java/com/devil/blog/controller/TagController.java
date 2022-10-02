@@ -18,8 +18,14 @@ public class TagController {
     @Autowired
     private TagService tagService = new TagServiceImpl();
 
+    @GetMapping("/tags")
+    public List<Tag> getTags() {
+        List<Tag> tags = tagService.getTags();
+        return tags;
+    }
+
     @GetMapping("/tag")
-    public Tag getCategory(int id) {
+    public Tag getTag(int id) {
         Tag tag = tagService.getTag(id);
         return tag;
     }

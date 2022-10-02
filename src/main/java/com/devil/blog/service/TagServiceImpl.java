@@ -21,6 +21,12 @@ public class TagServiceImpl implements TagService {
     private ArticleMapper articleMapper;
 
     @Override
+    public List<Tag> getTags() {
+        List<Tag> tags = tagMapper.getTags();
+        return tags;
+    }
+
+    @Override
     public Tag getTag(int id) {
         Tag tag = tagMapper.getTag(id);
         return tag;
@@ -46,4 +52,5 @@ public class TagServiceImpl implements TagService {
         }
         return abstracts;
     }
+
 }
