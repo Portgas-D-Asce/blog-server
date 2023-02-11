@@ -2,8 +2,11 @@ package com.devil.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Article;
@@ -26,5 +29,20 @@ public class AritcleController {
     public String getContent(@PathVariable("id") int id) {
         String content = articleService.getContent(id);
         return content;
+    }
+
+    @PostMapping("article")
+    public Article insertArticle(Article article) {
+        return new Article();
+    }
+
+    @DeleteMapping("article/{id}")
+    public Boolean deleteArticle(@PathVariable("id") int id) {
+        return articleService.deleteArticle(id);
+    }
+
+    @PutMapping("article/{id}")
+    public Article updateArticle(@PathVariable("id") int id, Article article) {
+        return new Article();
     }
 }

@@ -17,4 +17,6 @@ public interface CategoryMapper {
     public Category getCategory(int id);
     //获取指定 分类 下所有文章
     public List<Article> getArticles(List<Integer> ids);
+
+    public boolean deleteCategory(int id);
 }

@@ -11,4 +11,8 @@
         tag inner join tag_article on tag.id = tag_article.tid
         where tag_article.aid = #{id}
     </select>
+
+    <delete id="deleteArticle">
+        delete from article where id = #{id}
+    </delete>
 </mapper>

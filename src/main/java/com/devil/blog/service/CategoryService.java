@@ -10,4 +10,7 @@ public interface CategoryService {
     public CategoryTree getTree(int id);
     public List<ArticleAbstract> getAbstracts(int id);
     public Category getCategory(int id);
+
+    public int insertCategory(Category category);
+    public boolean deleteCategory(int id);
 }

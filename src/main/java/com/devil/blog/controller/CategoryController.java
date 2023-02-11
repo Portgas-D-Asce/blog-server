@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Category;
@@ -37,5 +40,20 @@ public class CategoryController {
     public List<ArticleAbstract> getAbstract(@PathVariable("id") int id) {
         List<ArticleAbstract> abstracts = categoryService.getAbstracts(id);
         return abstracts;
+    }
+
+    @PostMapping("/category")
+    public Category insertCategory() {
+        return new Category();
+    }
+
+    @DeleteMapping("/category/{id}")
+    public boolean deleteCategory(@PathVariable("id") int id) {
+        return categoryService.deleteCategory(id);
+    }
+
+    @PutMapping("/category/{id}")
+    public Category updateCategory(@PathVariable("id") int id) {
+        return new Category();
     }
 }

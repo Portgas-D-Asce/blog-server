@@ -6,14 +6,20 @@
   <select id="getTags" resultType="Tag">
     select * from tag
   </select>
+
   <select id="getTag" resultType="Tag">
     select * from tag where id = #{id}
   </select>
+
   <select id="getArticles" resultType="Article">
     select article.* from tag_article inner join article on 
     tag_article.aid=article.id 
     where
     tag_article.tid = #{id}
   </select>
+
+  <delete id="deleteTag">
+    delete from tag where id = #{id}
+  </delete>
 
 </mapper>

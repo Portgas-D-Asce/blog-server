@@ -53,4 +53,13 @@ public class TagServiceImpl implements TagService {
         return abstracts;
     }
 
+    @Override
+    public int insertTag(Tag tag) {
+        return 0;
+    }
+
+    @Override
+    public boolean deleteTag(int id) {
+        return tagMapper.deleteTag(id);
+    }
 }

@@ -44,5 +44,15 @@ public class ArticleServiceImpl implements ArticleService {
         
         return stringBuilder.toString();
     }
-    
+
+    @Override
+    public int insertArticle(Article article) {
+        return 0;
+    }
+
+    @Override
+    public boolean deleteArticle(int id) {
+        boolean res = articleMapper.deleteArticle(id);
+        return res;
+    }
 }

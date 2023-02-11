@@ -9,4 +9,7 @@ public interface TagService {
     public List<Tag> getTags();
     public Tag getTag(int id);
     public List<ArticleAbstract> getAbstracts(int id);
+
+    public int insertTag(Tag tag);
+    public boolean deleteTag(int id);
 }

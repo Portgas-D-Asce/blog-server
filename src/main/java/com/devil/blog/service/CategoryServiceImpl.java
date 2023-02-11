@@ -87,4 +87,15 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return root;
     }
+
+    @Override
+    public int insertCategory(Category category) {
+        return 0;
+    }
+
+    @Override
+    public boolean deleteCategory(int id) {
+        return categoryMapper.deleteCategory(id);
+    }
+
 }

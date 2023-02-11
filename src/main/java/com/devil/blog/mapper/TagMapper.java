@@ -17,4 +17,6 @@ public interface TagMapper {
     public Tag getTag(int id);
     //获取指定 tag 下所有文章
     public List<Article> getArticles(int id);
+
+    public boolean deleteTag(int id);
 }
