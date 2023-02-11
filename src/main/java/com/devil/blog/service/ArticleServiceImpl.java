@@ -26,7 +26,7 @@ public class ArticleServiceImpl implements ArticleService {
     public String getContent(int id) {
         Article article = articleMapper.getArticle(id);
         String name = article.getName();
-        File file = new File("/Users/pk/Blog/article/" + name + "/" + name + ".md");
+        File file = new File("/Users/pk/Note/" + name + "/index.md");
         StringBuilder stringBuilder = new StringBuilder();
         try {
             FileReader fileReader = new FileReader(file);

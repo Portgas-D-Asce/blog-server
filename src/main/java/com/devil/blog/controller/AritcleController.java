@@ -3,6 +3,7 @@ package com.devil.blog.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Article;
@@ -15,14 +16,14 @@ public class AritcleController {
     @Autowired
     private ArticleService articleService = new ArticleServiceImpl();
 
-    @GetMapping("/article")
-    public Article getArticle(int id) {
+    @GetMapping("/article/{id}")
+    public Article getArticle(@PathVariable("id") int id) {
         Article article = articleService.getArticle(id);
         return article;
     }
 
-    @GetMapping("/article/content")
-    public String getContent(int id) {
+    @GetMapping("/article/{id}/content")
+    public String getContent(@PathVariable("id") int id) {
         String content = articleService.getContent(id);
         return content;
     }

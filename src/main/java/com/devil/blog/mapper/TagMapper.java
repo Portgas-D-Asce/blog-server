@@ -11,7 +11,10 @@ import com.devil.blog.entity.Tag;
 @Mapper
 @Repository
 public interface TagMapper {
+    //获取所有 tag 信息
     public List<Tag> getTags();
+    //获取指定 tag 信息
     public Tag getTag(int id);
+    //获取指定 tag 下所有文章
     public List<Article> getArticles(int id);
 }
