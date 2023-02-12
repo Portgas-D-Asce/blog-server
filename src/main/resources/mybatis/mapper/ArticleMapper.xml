@@ -8,8 +8,8 @@
     </select>
     <select id="getTags" resultType="Tag">
         select tag.* from
-        tag inner join tag_article on tag.id = tag_article.tid
-        where tag_article.aid = #{id}
+        tag inner join bind on tag.id = bind.tid
+        where bind.aid = #{id}
     </select>
 
     <delete id="deleteArticle">

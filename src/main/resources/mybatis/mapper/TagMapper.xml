@@ -12,10 +12,10 @@
   </select>
 
   <select id="getArticles" resultType="Article">
-    select article.* from tag_article inner join article on 
-    tag_article.aid=article.id 
+    select article.* from bind inner join article on 
+    bind.aid=article.id 
     where
-    tag_article.tid = #{id}
+    bind.tid = #{id}
   </select>
 
   <delete id="deleteTag">
