@@ -1,6 +1,8 @@
 package com.devil.blog.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,16 +11,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Tag;
 import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.service.TagService;
 import com.devil.blog.service.TagServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 @CrossOrigin
 @RestController
 public class TagController {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private TagService tagService = new TagServiceImpl();
 
@@ -41,8 +49,15 @@ public class TagController {
     }
 
     @PostMapping("/tag")
-    public Tag insertTag() {
-        return new Tag();
+    public int insertTag(@RequestBody Map<String, Object> map) throws JsonMappingException, JsonProcessingException {
+        Object obj_tag = map.get("tag");
+        Object obj_aids = map.get("aids");
+
+        Tag tag = objectMapper.readValue(objectMapper.writeValueAsString(obj_tag), Tag.class);
+        CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(
+            ArrayList.class, Integer.class);
+        List<Integer> aids = objectMapper.readValue(objectMapper.writeValueAsString(obj_aids), listType);
+        return tagService.insertTag(tag, aids);
     }
 
     @DeleteMapping("/tag/{id}")

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Category;
@@ -43,8 +44,8 @@ public class CategoryController {
     }
 
     @PostMapping("/category")
-    public Category insertCategory() {
-        return new Category();
+    public int insertCategory(@RequestBody Category category) {
+        return categoryService.insertCategory(category);
     }
 
     @DeleteMapping("/category/{id}")

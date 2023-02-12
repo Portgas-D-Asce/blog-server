@@ -16,5 +16,6 @@ public interface ArticleMapper {
     //获取指定 article 的标签列表
     public List<Tag> getTags(int id);
 
+    public int insertArticle(Article article);
     public boolean deleteArticle(int id);
 }

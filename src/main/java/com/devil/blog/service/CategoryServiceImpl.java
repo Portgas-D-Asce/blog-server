@@ -90,7 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public int insertCategory(Category category) {
-        return 0;
+        return categoryMapper.insertCategory(category);
     }
 
     @Override

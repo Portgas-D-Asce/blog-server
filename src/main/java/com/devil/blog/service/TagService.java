@@ -10,6 +10,6 @@ public interface TagService {
     public Tag getTag(int id);
     public List<ArticleAbstract> getAbstracts(int id);
 
-    public int insertTag(Tag tag);
+    public int insertTag(Tag tag, List<Integer> aids);
     public boolean deleteTag(int id);
 }

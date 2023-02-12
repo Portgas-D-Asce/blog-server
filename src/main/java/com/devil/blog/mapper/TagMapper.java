@@ -19,4 +19,5 @@ public interface TagMapper {
     public List<Article> getArticles(int id);
 
     public boolean deleteTag(int id);
+    public int insertTag(Tag tag);
 }

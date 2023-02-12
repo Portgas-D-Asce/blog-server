@@ -20,4 +20,8 @@
   <delete id="deleteCategory">
     delete from category where id = #{id}
   </delete>
+
+  <insert id="insertCategory" parameterType="Category" useGeneratedKeys="true" keyProperty="id">
+     insert into category(id, pid, name, description) values(0, #{pid}, #{name}, #{description})
+  </insert>
 </mapper>

@@ -15,4 +15,9 @@
     <delete id="deleteArticle">
         delete from article where id = #{id}
     </delete>
+
+    <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id">
+        insert into article(id, cid, name, description, path, date, `read`, upvoted, downvoted)
+        values(0, #{cid}, #{name}, #{description}, NULL, now(), 0, 0, 0)
+    </insert>
 </mapper>

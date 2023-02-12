@@ -22,4 +22,7 @@
     delete from tag where id = #{id}
   </delete>
 
+  <insert id="insertTag" parameterType="Tag" useGeneratedKeys="true" keyProperty="id">
+    insert into tag(id, name, description) values(0, #{name}, #{description})
+  </insert>
 </mapper>

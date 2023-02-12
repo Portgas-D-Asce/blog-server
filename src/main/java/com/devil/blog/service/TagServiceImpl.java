@@ -5,17 +5,22 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Tag;
 import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.mapper.ArticleMapper;
+import com.devil.blog.mapper.BindMapper;
 import com.devil.blog.mapper.TagMapper;
 
 @Service
 public class TagServiceImpl implements TagService {
     @Autowired
     private TagMapper tagMapper;
+
+    @Autowired
+    private BindMapper bindMapper;
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -54,12 +59,20 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int insertTag(Tag tag) {
-        return 0;
+    @Transactional
+    public int insertTag(Tag tag, List<Integer> aids) {
+        tagMapper.insertTag(tag);
+        int tid = tag.getId();
+        if(aids != null && aids.size() > 0) {
+            bindMapper.bindArticles(tid, aids);
+        }
+        return tag.getId();
     }
 
     @Override
+    @Transactional
     public boolean deleteTag(int id) {
+        bindMapper.unbindArticles(id);
         return tagMapper.deleteTag(id);
     }
 }

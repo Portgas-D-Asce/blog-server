@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.devil.blog.mapper.BindMapper">
+    <insert id="bindTags">
+        insert into tag_article(tid, aid) values
+        <foreach collection="tids" item="tid" index="index">
+            <if test="index!=0">,</if> (#{tid}, #{aid})
+        </foreach>
+    </insert>
+
+    <delete id="unbindTags">
+        delete from tag_article where aid = #{aid}
+    </delete>
+
+    <insert id="bindArticles">
+        insert into tag_article(tid, aid) values
+        <foreach collection="aids" item="aid" index="index">
+            <if test="index!=0">,</if> (#{tid}, #{aid})
+        </foreach>
+    </insert>
+
+    <delete id="unbindArticles">
+        delete from tag_article where tid = #{tid}
+    </delete>
+</mapper>
