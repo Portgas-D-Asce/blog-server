@@ -18,4 +18,6 @@ public interface ArticleMapper {
 
     public int insertArticle(Article article);
     public boolean deleteArticle(int id);
+
+    public boolean updateArticle(int id, String name, byte[] content);
 }

@@ -1,30 +1,35 @@
 package com.devil.blog.entity;
 
+import java.util.Arrays;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Article {
     private int id;
     private int cid;
     private String name;
     private String description;
-    private String path;
     private Date date;
     private int read;
     private int upvoted;
     private int downvoted;
+    @JsonIgnore
+    private byte[] content;
+
     public Article() {
     }
-    public Article(int id, int cid, String name, String description, String path, Date date, int read,
-            int upvoted, int downvoted) {
+    public Article(int id, int cid, String name, String description, Date date, int read, int upvoted, int downvoted,
+            byte[] content) {
         this.id = id;
         this.cid = cid;
         this.name = name;
         this.description = description;
-        this.path = path;
         this.date = date;
         this.read = read;
         this.upvoted = upvoted;
         this.downvoted = downvoted;
+        this.content = content;
     }
     public int getId() {
         return id;
@@ -50,12 +55,6 @@ public class Article {
     public void setDescription(String description) {
         this.description = description;
     }
-    public String getPath() {
-        return path;
-    }
-    public void setPath(String path) {
-        this.path = path;
-    }
     public Date getDate() {
         return date;
     }
@@ -80,10 +79,17 @@ public class Article {
     public void setDownvoted(int downvoted) {
         this.downvoted = downvoted;
     }
+    public byte[] getContent() {
+        return content;
+    }
+    public void setContent(byte[] content) {
+        this.content = content;
+    } 
+
     @Override
     public String toString() {
-        return "Article [cid=" + cid + ", date=" + date + ", description=" + description + ", downvoted=" + downvoted
-                + ", id=" + id + ", name=" + name + ", path=" + path + ", read=" + read
-                + ", upvoted=" + upvoted + "]";
-    } 
+        return "Article [id=" + id + ", cid=" + cid + ", name=" + name + ", description=" + description + ", date="
+                + date + ", read=" + read + ", upvoted=" + upvoted + ", downvoted=" + downvoted + ", content="
+                + Arrays.toString(content) + "]";
+    }
 }

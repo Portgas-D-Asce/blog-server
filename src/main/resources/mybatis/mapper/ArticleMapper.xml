@@ -20,4 +20,7 @@
         insert into article(id, cid, name, description, path, date, `read`, upvoted, downvoted)
         values(0, #{cid}, #{name}, #{description}, NULL, now(), 0, 0, 0)
     </insert>
+    <update id="updateArticle">
+        update article set name = #{name}, content = #{content} where id = #{id}
+    </update>
 </mapper>

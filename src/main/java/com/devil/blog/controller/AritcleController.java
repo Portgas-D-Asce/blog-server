@@ -1,5 +1,7 @@
 package com.devil.blog.controller;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.devil.blog.entity.Article;
 import com.devil.blog.service.ArticleService;
@@ -37,10 +41,17 @@ public class AritcleController {
 
     @GetMapping("/article/{id}/content")
     public String getContent(@PathVariable("id") int id) {
-        String content = articleService.getContent(id);
-        return content;
+        Article article = articleService.getArticle(id);
+        return new String(article.getContent(), StandardCharsets.UTF_8);
     }
 
+    @PutMapping("/article/{id}/content")
+    public boolean insertArticle(@PathVariable("id") int id, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+        String name = multipartFile.getOriginalFilename();
+        byte[] bytes = multipartFile.getBytes();
+
+        return articleService.updateArticle(id, name, bytes);
+    }
     @PostMapping("article")
     public int insertArticle(@RequestBody Map<String, Object> map) throws JsonMappingException, JsonProcessingException {
         Object obj_article = map.get("article");

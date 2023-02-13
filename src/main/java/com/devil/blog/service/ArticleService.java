@@ -7,8 +7,9 @@ import com.devil.blog.entity.Article;
 
 public interface ArticleService {
     public Article getArticle(int id);
-    public String getContent(int id);
 
     public int insertArticle(Article article, List<Integer> tids);
     public boolean deleteArticle(int id);
+
+    public boolean updateArticle(int id, String name, byte[] content);
 }
