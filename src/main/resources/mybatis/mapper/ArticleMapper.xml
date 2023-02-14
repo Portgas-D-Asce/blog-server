@@ -6,6 +6,19 @@
     <select id="getArticle" resultType="Article">
         select * from article where id = #{id}
     </select>
+
+    <update id="updateArticle" parameterType="Map">
+        update article set 
+        <foreach collection="map.entrySet()" separator=", " item="val" index="key" open=" " close=" ">
+            ${key} = #{val}
+        </foreach>
+        where id = #{id}
+    </update>
+
+    <update id="updateContent">
+        update article set name = #{name}, content = #{content} where id = #{id}
+    </update>
+
     <select id="getTags" resultType="Tag">
         select tag.* from
         tag inner join bind on tag.id = bind.tid
@@ -17,10 +30,7 @@
     </delete>
 
     <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id">
-        insert into article(id, cid, name, description, path, date, `read`, upvoted, downvoted)
-        values(0, #{cid}, #{name}, #{description}, NULL, now(), 0, 0, 0)
+        insert into article(id, cid, name, description, date, `read`, upvoted, downvoted)
+        values(0, #{cid}, #{name}, #{description}, now(), 0, 0, 0)
     </insert>
-    <update id="updateArticle">
-        update article set name = #{name}, content = #{content} where id = #{id}
-    </update>
 </mapper>

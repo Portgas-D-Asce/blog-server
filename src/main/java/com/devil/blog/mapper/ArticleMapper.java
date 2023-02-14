@@ -1,6 +1,7 @@
 package com.devil.blog.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -11,13 +12,13 @@ import com.devil.blog.entity.Tag;
 @Mapper
 @Repository
 public interface ArticleMapper {
-    //获取指定 article 
     public Article getArticle(int id);
-    //获取指定 article 的标签列表
-    public List<Tag> getTags(int id);
+    public boolean updateArticle(int id, Map<String, Object> map);
+
+    public boolean updateContent(int id, String name, byte[] content);
 
     public int insertArticle(Article article);
     public boolean deleteArticle(int id);
 
-    public boolean updateArticle(int id, String name, byte[] content);
+    public List<Tag> getTags(int id);
 }

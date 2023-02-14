@@ -39,6 +39,12 @@ public class AritcleController {
         return article;
     }
 
+    @PutMapping("/article/{id}")
+    public boolean updateArticle(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
+        System.out.println(map.toString());
+        return articleService.updateArticle(id, map);
+    }
+
     @GetMapping("/article/{id}/content")
     public String getContent(@PathVariable("id") int id) {
         Article article = articleService.getArticle(id);
@@ -46,12 +52,15 @@ public class AritcleController {
     }
 
     @PutMapping("/article/{id}/content")
-    public boolean insertArticle(@PathVariable("id") int id, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+    public boolean updateContent(@PathVariable("id") int id, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String name = multipartFile.getOriginalFilename();
+        if(name != null) {
+            name = name.substring(0, name.lastIndexOf("."));
+        }
         byte[] bytes = multipartFile.getBytes();
-
-        return articleService.updateArticle(id, name, bytes);
+        return articleService.updateContent(id, name, bytes);
     }
+
     @PostMapping("article")
     public int insertArticle(@RequestBody Map<String, Object> map) throws JsonMappingException, JsonProcessingException {
         Object obj_article = map.get("article");
@@ -68,10 +77,5 @@ public class AritcleController {
     @DeleteMapping("article/{id}")
     public Boolean deleteArticle(@PathVariable("id") int id) {
         return articleService.deleteArticle(id);
-    }
-
-    @PutMapping("article/{id}")
-    public Article updateArticle(@PathVariable("id") int id, Article article) {
-        return new Article();
     }
 }

@@ -1,6 +1,7 @@
 package com.devil.blog.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,16 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public boolean updateArticle(int id, Map<String, Object> map) {
+        return articleMapper.updateArticle(id, map);
+    }
+
+    @Override
+    public boolean updateContent(int id, String name, byte[] content) {
+        return articleMapper.updateContent(id, name, content);
+    }
+
+    @Override
     @Transactional
     public int insertArticle(Article article, List<Integer> tids) {
         articleMapper.insertArticle(article);
@@ -41,10 +52,5 @@ public class ArticleServiceImpl implements ArticleService {
 
         boolean res = articleMapper.deleteArticle(id);
         return res;
-    }
-
-    @Override
-    public boolean updateArticle(int id, String name, byte[] content) {
-        return articleMapper.updateArticle(id, name, content);
     }
 }
