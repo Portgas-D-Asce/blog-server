@@ -1,6 +1,5 @@
 package com.devil.blog.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.devil.blog.entity.Article;
@@ -12,6 +11,6 @@ public interface ArticleService {
 
     public boolean updateContent(int id, String name, byte[] content);
 
-    public int insertArticle(Article article, List<Integer> tids);
+    public int insertArticle(Map<String, Object> params);
     public boolean deleteArticle(int id);
 }

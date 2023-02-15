@@ -17,7 +17,7 @@ public interface ArticleMapper {
 
     public boolean updateContent(int id, String name, byte[] content);
 
-    public int insertArticle(Article article);
+    public int insertArticle(Map<String, Object> map);
     public boolean deleteArticle(int id);
 
     public List<Tag> getTags(int id);

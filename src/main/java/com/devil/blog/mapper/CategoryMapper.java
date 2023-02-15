@@ -1,6 +1,7 @@
 package com.devil.blog.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -11,13 +12,12 @@ import com.devil.blog.entity.Category;
 @Mapper
 @Repository
 public interface CategoryMapper {
-    //获取所有 分类 信息
-    public List<Category> getCategories();
-    //获取指定 分类 信息
     public Category getCategory(int id);
-    //获取指定 分类 下所有文章
+    public boolean updateCategory(int id, Map<String, Object> map);
+
+    public List<Category> getCategories();
     public List<Article> getArticles(List<Integer> ids);
 
-    public int insertCategory(Category category);
+    public int insertCategory(Map<String, Object> params);
     public boolean deleteCategory(int id);
 }

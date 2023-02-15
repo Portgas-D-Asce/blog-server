@@ -1,6 +1,6 @@
 package com.devil.blog.service;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +35,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    @Transactional
-    public int insertArticle(Article article, List<Integer> tids) {
-        articleMapper.insertArticle(article);
-        int aid = article.getId();
-        if(tids != null && tids.size() > 0) {
-            bindMapper.bindTags(aid, tids);
-        }
-        return aid;
+    public int insertArticle(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("params", params);
+        articleMapper.insertArticle(map);
+        String sid = map.get("id").toString();
+        return Integer.parseInt(sid);
     }
 
     @Override

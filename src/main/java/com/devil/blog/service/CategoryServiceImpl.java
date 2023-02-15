@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public boolean updateCategory(int id, Map<String, Object> map) {
+        return categoryMapper.updateCategory(id, map);
+    }
+
+    @Override
     public CategoryTree getTree(int id) {
         List<Category> categories = categoryMapper.getCategories();
         CategoryTree root = null;
@@ -89,8 +95,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public int insertCategory(Category category) {
-        return categoryMapper.insertCategory(category);
+    public int insertCategory(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("params", params);
+        categoryMapper.insertCategory(map);
+        String sid = map.get("id").toString();
+        return Integer.parseInt(sid);
     }
 
     @Override

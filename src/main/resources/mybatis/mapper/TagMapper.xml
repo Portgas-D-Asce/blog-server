@@ -3,26 +3,41 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devil.blog.mapper.TagMapper">
-  <select id="getTags" resultType="Tag">
-    select * from tag
-  </select>
+    <select id="getTags" resultType="Tag">
+        select * from tag
+    </select>
 
-  <select id="getTag" resultType="Tag">
-    select * from tag where id = #{id}
-  </select>
+    <select id="getTag" resultType="Tag">
+        select * from tag where id = #{id}
+    </select>
 
-  <select id="getArticles" resultType="Article">
-    select article.* from bind inner join article on 
-    bind.aid=article.id 
-    where
-    bind.tid = #{id}
-  </select>
+    <update id="updateTag" parameterType="Map">
+        update tag set 
+        <foreach collection="map" separator=", " item="val" index="key" open=" " close=" ">
+            ${key} = #{val}
+        </foreach>
+        where id = #{id}
+    </update>
 
-  <delete id="deleteTag">
-    delete from tag where id = #{id}
-  </delete>
+    <select id="getArticles" resultType="Article">
+        select article.* from bind inner join article on 
+        bind.aid=article.id 
+        where
+        bind.tid = #{id}
+    </select>
 
-  <insert id="insertTag" parameterType="Tag" useGeneratedKeys="true" keyProperty="id">
-    insert into tag(id, name, description) values(0, #{name}, #{description})
-  </insert>
+    <delete id="deleteTag">
+        delete from tag where id = #{id}
+    </delete>
+
+    <insert id="insertTag" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+        insert into tag 
+        <foreach collection="params" separator=", " item="val" index="key" open="(" close=")">
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params" separator=", " item="val" index="key" open="(" close=")">
+            #{val}
+        </foreach>
+    </insert>
 </mapper>

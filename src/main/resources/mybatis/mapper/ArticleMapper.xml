@@ -29,8 +29,14 @@
         delete from article where id = #{id}
     </delete>
 
-    <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id">
-        insert into article(id, cid, name, description, date, `read`, upvoted, downvoted)
-        values(0, #{cid}, #{name}, #{description}, now(), 0, 0, 0)
+    <insert id="insertArticle" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+        insert into article 
+        <foreach collection="params" separator=", " item="val" index="key" open="(" close=")">
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params" separator=", " item="val" index="key" open="(" close=")">
+            #{val}
+        </foreach>
     </insert>
 </mapper>

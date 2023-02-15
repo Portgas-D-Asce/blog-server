@@ -1,6 +1,7 @@
 package com.devil.blog.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +31,11 @@ public class CategoryController {
         return category;
     }
 
+    @PutMapping("/category/{id}")
+    public boolean updateCategory(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
+        return categoryService.updateCategory(id, map);
+    }
+
     @GetMapping("/category/{id}/tree")
     public CategoryTree getTree(@PathVariable("id") int id) {
         System.out.println(id);
@@ -44,8 +50,8 @@ public class CategoryController {
     }
 
     @PostMapping("/category")
-    public int insertCategory(@RequestBody Category category) {
-        return categoryService.insertCategory(category);
+    public int insertCategory(@RequestBody Map<String, Object> map) {
+        return categoryService.insertCategory(map);
     }
 
     @DeleteMapping("/category/{id}")
@@ -53,8 +59,4 @@ public class CategoryController {
         return categoryService.deleteCategory(id);
     }
 
-    @PutMapping("/category/{id}")
-    public Category updateCategory(@PathVariable("id") int id) {
-        return new Category();
-    }
 }

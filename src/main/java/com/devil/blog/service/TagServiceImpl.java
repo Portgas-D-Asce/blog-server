@@ -1,7 +1,9 @@
 package com.devil.blog.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public boolean updateTag(int id, Map<String, Object> map) {
+        return tagMapper.updateTag(id, map);
+    }
+
+    @Override
     public List<ArticleAbstract> getAbstracts(int id) {
         List<Article> articles = tagMapper.getArticles(id);
         System.out.println(articles.toString());
@@ -60,13 +67,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public int insertTag(Tag tag, List<Integer> aids) {
-        tagMapper.insertTag(tag);
-        int tid = tag.getId();
-        if(aids != null && aids.size() > 0) {
-            bindMapper.bindArticles(tid, aids);
-        }
-        return tag.getId();
+    public int insertTag(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("params", params);
+        tagMapper.insertTag(map);
+        String sid = map.get("id").toString();
+        return Integer.parseInt(sid);
     }
 
     @Override
