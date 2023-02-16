@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.devil.blog.mapper.ImageMapper">
+    <select id="getImage" resultType="Image">
+        select * from image where id = #{id}
+    </select>
+
+    <delete id="deleteImage">
+        delete from image where id = #{id}
+    </delete>
+
+    <insert id="insertImage" parameterType="Image" useGeneratedKeys="true" keyProperty="id">
+        insert into image(id, name, type, content) values(0, #{name}, #{type}, #{content}) 
+    </insert>
+</mapper>
