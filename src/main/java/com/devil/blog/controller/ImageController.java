@@ -1,9 +1,6 @@
 package com.devil.blog.controller;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,15 +29,7 @@ public class ImageController {
         Image image = imageService.getImage(id);
         response.setCharacterEncoding("UTF-8");
         response.setContentType(image.getType());
-
-        OutputStream outputSream = response.getOutputStream();
-	    InputStream in = new ByteArrayInputStream(image.getContent());
-	    int len = 0;
-	    byte[] buf = new byte[1024];
-	    while ((len = in.read(buf, 0, 1024)) != -1) {
-		    outputSream.write(buf, 0, len);
-	    }
-	    outputSream.close();
+        response.getOutputStream().write(image.getContent());
     }
 
     @PostMapping("/image")
