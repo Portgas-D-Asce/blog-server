@@ -10,7 +10,7 @@ public interface TagService {
     public Tag getTag(int id);
     public boolean updateTag(int id, Map<String, Object> map);
 
-    public List<Tag> getTags();
+    public List<Map<String, Object>> getTags();
     public List<ArticleAbstract> getAbstracts(int id);
 
     public int insertTag(Map<String, Object> params);

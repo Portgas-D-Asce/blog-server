@@ -25,9 +25,8 @@ public class TagController {
     private TagService tagService = new TagServiceImpl();
 
     @GetMapping("/tag")
-    public List<Tag> getTags() {
-        List<Tag> tags = tagService.getTags();
-        return tags;
+    public List<Map<String, Object>> getTags() {
+        return tagService.getTags();
     }
 
     @GetMapping("/tag/{id}")
