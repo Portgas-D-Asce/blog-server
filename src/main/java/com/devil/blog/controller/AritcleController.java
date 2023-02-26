@@ -26,25 +26,25 @@ public class AritcleController {
     @Autowired
     private ArticleService articleService = new ArticleServiceImpl();
 
-    @GetMapping("/article/{id}")
+    @GetMapping("/api/v1/article/{id}")
     public Article getArticle(@PathVariable("id") int id) {
         Article article = articleService.getArticle(id);
         return article;
     }
 
-    @PutMapping("/article/{id}")
+    @PutMapping("/api/v1/article/{id}")
     public boolean updateArticle(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
         System.out.println(map.toString());
         return articleService.updateArticle(id, map);
     }
 
-    @GetMapping("/article/{id}/content")
+    @GetMapping("/api/v1/article/{id}/content")
     public String getContent(@PathVariable("id") int id) {
         Article article = articleService.getArticle(id);
         return new String(article.getContent(), StandardCharsets.UTF_8);
     }
 
-    @PutMapping("/article/{id}/content")
+    @PutMapping("/api/v1/article/{id}/content")
     public boolean updateContent(@PathVariable("id") int id, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String name = multipartFile.getOriginalFilename();
         if(name != null) {
@@ -54,12 +54,12 @@ public class AritcleController {
         return articleService.updateContent(id, name, bytes);
     }
 
-    @PostMapping("article")
+    @PostMapping("/api/v1/article")
     public int insertArticle(@RequestBody Map<String, Object> map) {
         return articleService.insertArticle(map);
     }
 
-    @DeleteMapping("article/{id}")
+    @DeleteMapping("/api/v1/article/{id}")
     public Boolean deleteArticle(@PathVariable("id") int id) {
         return articleService.deleteArticle(id);
     }

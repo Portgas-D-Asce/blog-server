@@ -24,29 +24,29 @@ public class TagController {
     @Autowired
     private TagService tagService = new TagServiceImpl();
 
-    @GetMapping("/tag")
+    @GetMapping("/api/v1/tag")
     public List<Map<String, Object>> getTags() {
         return tagService.getTags();
     }
 
-    @GetMapping("/tag/{id}")
+    @GetMapping("/api/v1/tag/{id}")
     public Tag getTag(@PathVariable("id") int id) {
         Tag tag = tagService.getTag(id);
         return tag;
     }
 
-    @PutMapping("/tag/{id}")
+    @PutMapping("/api/v1/tag/{id}")
     public boolean updateTag(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
         return tagService.updateTag(id, map);
     }
 
-    @GetMapping("/tag/{id}/abstract")
+    @GetMapping("/api/v1/tag/{id}/abstract")
     public List<ArticleAbstract> getAbstracts(@PathVariable("id") int id) {
         List<ArticleAbstract> abstracts = tagService.getAbstracts(id);
         return abstracts;
     }
 
-    @PostMapping("/tag")
+    @PostMapping("/api/v1/tag")
     public int insertTag(@RequestBody Map<String, Object> map) {
         //Object obj_aids = map.get("aids");
 
@@ -58,7 +58,7 @@ public class TagController {
         return tagService.insertTag(map);
     }
 
-    @DeleteMapping("/tag/{id}")
+    @DeleteMapping("/api/v1/tag/{id}")
     public boolean deleteTag(@PathVariable("id") int id) {
         return tagService.deleteTag(id);
     }
