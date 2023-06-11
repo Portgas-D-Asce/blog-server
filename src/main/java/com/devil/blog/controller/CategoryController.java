@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Category;
 import com.devil.blog.entity.model.ArticleAbstract;
-import com.devil.blog.entity.model.CategoryTree;
 import com.devil.blog.service.CategoryService;
 import com.devil.blog.service.CategoryServiceImpl;
 
@@ -26,21 +26,14 @@ public class CategoryController {
     private CategoryService categoryService = new CategoryServiceImpl();
 
     @GetMapping("/api/v1/category/{id}")
-    public Category getCategory(@PathVariable("id") int id) {
-        Category category = categoryService.getCategory(id);
+    public Category getCategory(@PathVariable("id") int id, @RequestParam(defaultValue = "true") String recursion) {
+        Category category = categoryService.getCategory(id, new Boolean(recursion));
         return category;
     }
 
     @PutMapping("/api/v1/category/{id}")
     public boolean updateCategory(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
         return categoryService.updateCategory(id, map);
-    }
-
-    @GetMapping("/api/v1/category/{id}/tree")
-    public CategoryTree getTree(@PathVariable("id") int id) {
-        System.out.println(id);
-        CategoryTree tree = categoryService.getTree(id);
-        return tree;
     }
 
     @GetMapping("/api/v1/category/{id}/abstract")
@@ -58,5 +51,4 @@ public class CategoryController {
     public boolean deleteCategory(@PathVariable("id") int id) {
         return categoryService.deleteCategory(id);
     }
-
 }

@@ -14,7 +14,6 @@ import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Category;
 import com.devil.blog.entity.Tag;
 import com.devil.blog.entity.model.ArticleAbstract;
-import com.devil.blog.entity.model.CategoryTree;
 import com.devil.blog.mapper.ArticleMapper;
 import com.devil.blog.mapper.CategoryMapper;
 
@@ -27,14 +26,14 @@ public class CategoryServiceImpl implements CategoryService {
     private ArticleMapper articleMapper;
 
     public List<ArticleAbstract> getAbstracts(int id) {
-        CategoryTree root = getTree(id);
-        Queue<CategoryTree> que = new LinkedList<>();
+        Category root = getCategory(id, true);
+        Queue<Category> que = new LinkedList<>();
         que.add(root);
         List<Integer> ids = new ArrayList<>();
         while(!que.isEmpty()) {
-            CategoryTree u = que.peek();
+            Category u = que.peek();
             ids.add(u.getId());
-            for(CategoryTree v : u.getChildren()) {
+            for(Category v : u.getChildren()) {
                 que.add(v);
             }
             que.poll();
@@ -62,27 +61,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategory(int id) {
-        Category category = categoryMapper.getCategory(id);
-        return category;
-    }
-
-    @Override
     public boolean updateCategory(int id, Map<String, Object> map) {
         return categoryMapper.updateCategory(id, map);
     }
 
     @Override
-    public CategoryTree getTree(int id) {
+    public Category getCategory(int id, Boolean recursion) {
+        if(recursion == false) {
+            Category category = categoryMapper.getCategory(id);
+            System.out.println(category.toString());
+            return category;
+        }
+
         List<Category> categories = categoryMapper.getCategories();
-        CategoryTree root = null;
-        HashMap<Integer, CategoryTree> hmp = new HashMap<>();
+        Category root = null;
+        HashMap<Integer, Category> hmp = new HashMap<>();
         for(Category category : categories) {
-            CategoryTree node = new CategoryTree(category.getId(), category.getName(),
-            category.getDescription(), new ArrayList<CategoryTree>());
-            hmp.put(category.getId(), node);
-            if(node.getId() == id) {
-                root = node;
+            category.setChildren(new ArrayList<Category>());
+            hmp.put(category.getId(), category);
+            if(category.getId() == id) {
+                root = category;
             }
         }
         for(Category category : categories) {

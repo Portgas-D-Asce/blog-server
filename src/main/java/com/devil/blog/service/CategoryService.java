@@ -5,13 +5,11 @@ import java.util.Map;
 
 import com.devil.blog.entity.Category;
 import com.devil.blog.entity.model.ArticleAbstract;
-import com.devil.blog.entity.model.CategoryTree;
 
 public interface CategoryService {
-    public Category getCategory(int id);
     public boolean updateCategory(int id, Map<String, Object> map);
 
-    public CategoryTree getTree(int id);
+    public Category getCategory(int id, Boolean recursion);
     public List<ArticleAbstract> getAbstracts(int id);
 
     public int insertCategory(Map<String, Object> params);
