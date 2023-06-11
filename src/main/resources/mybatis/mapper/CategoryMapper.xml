@@ -19,14 +19,6 @@
         where id = #{id}
     </update>
 
-    <select id="getArticles" resultType="Article">
-        select * from article where cid in (
-            <foreach collection="list" item="id" index="index">
-                <if test="index!=0">,</if> #{id}
-            </foreach>
-        )
-    </select>
-
     <delete id="deleteCategory">
         delete from category where id = #{id}
     </delete>

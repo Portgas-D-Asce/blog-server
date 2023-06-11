@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Tag;
-import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.service.TagService;
 import com.devil.blog.service.TagServiceImpl;
 
@@ -38,12 +37,6 @@ public class TagController {
     @PutMapping("/api/v1/tag/{id}")
     public boolean updateTag(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
         return tagService.updateTag(id, map);
-    }
-
-    @GetMapping("/api/v1/tag/{id}/abstract")
-    public List<ArticleAbstract> getAbstracts(@PathVariable("id") int id) {
-        List<ArticleAbstract> abstracts = tagService.getAbstracts(id);
-        return abstracts;
     }
 
     @PostMapping("/api/v1/tag")

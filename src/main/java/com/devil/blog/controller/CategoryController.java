@@ -1,6 +1,5 @@
 package com.devil.blog.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Category;
-import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.service.CategoryService;
 import com.devil.blog.service.CategoryServiceImpl;
 
@@ -34,12 +32,6 @@ public class CategoryController {
     @PutMapping("/api/v1/category/{id}")
     public boolean updateCategory(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
         return categoryService.updateCategory(id, map);
-    }
-
-    @GetMapping("/api/v1/category/{id}/abstract")
-    public List<ArticleAbstract> getAbstract(@PathVariable("id") int id) {
-        List<ArticleAbstract> abstracts = categoryService.getAbstracts(id);
-        return abstracts;
     }
 
     @PostMapping("/api/v1/category")

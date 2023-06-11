@@ -12,6 +12,9 @@ import com.devil.blog.entity.Tag;
 @Mapper
 @Repository
 public interface ArticleMapper {
+    public List<Article> getArticlesByCategoryIds(List<Integer> ids);
+    public List<Article> getArticlesByTagId(int id);
+    
     public Article getArticle(int id);
     public boolean updateArticle(int id, Map<String, Object> map);
 

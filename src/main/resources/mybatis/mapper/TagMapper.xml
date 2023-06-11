@@ -21,13 +21,6 @@
         where id = #{id}
     </update>
 
-    <select id="getArticles" resultType="Article">
-        select article.* from bind inner join article on 
-        bind.aid=article.id 
-        where
-        bind.tid = #{id}
-    </select>
-
     <delete id="deleteTag">
         delete from tag where id = #{id}
     </delete>

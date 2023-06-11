@@ -2,7 +2,11 @@ package com.devil.blog.controller;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,14 +21,54 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.devil.blog.entity.Article;
+import com.devil.blog.entity.Category;
+import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.service.ArticleService;
 import com.devil.blog.service.ArticleServiceImpl;
+import com.devil.blog.service.CategoryService;
+import com.devil.blog.service.CategoryServiceImpl;
 
 @CrossOrigin
 @RestController
 public class AritcleController {
     @Autowired
     private ArticleService articleService = new ArticleServiceImpl();
+
+    @Autowired
+    private CategoryService categoryService = new CategoryServiceImpl();
+
+    @GetMapping("/api/v1/article")
+    public List<ArticleAbstract> getArticles(@RequestParam(defaultValue = "-1") int category_id, @RequestParam(defaultValue = "-1") int tag_id) {
+        List<ArticleAbstract> abstracts = new ArrayList<ArticleAbstract>();
+        if(category_id != -1 && tag_id != -1) {
+            System.out.println("category_id or tag_id, only can choose one!!!");
+            return new ArrayList<ArticleAbstract>();
+        }
+
+        if(tag_id != -1) {
+            abstracts = articleService.getAbstractsByTagId(tag_id);
+            return abstracts;
+        } 
+
+        if(category_id == -1) {
+            category_id = 0;
+        }
+        Category root = categoryService.getCategory(category_id, true);
+        Queue<Category> que = new LinkedList<>();
+        que.add(root);
+        List<Integer> ids = new ArrayList<>();
+        while(!que.isEmpty()) {
+            Category u = que.peek();
+            ids.add(u.getId());
+            for(Category v : u.getChildren()) {
+                que.add(v);
+            }
+            que.poll();
+        }
+
+        abstracts = articleService.getAbstractsByCategoryIds(ids);
+        return abstracts;
+    }
 
     @GetMapping("/api/v1/article/{id}")
     public Article getArticle(@PathVariable("id") int id) {
