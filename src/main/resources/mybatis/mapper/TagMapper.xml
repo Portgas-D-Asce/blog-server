@@ -3,10 +3,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devil.blog.mapper.TagMapper">
-    <select id="getTags" resultType="Map">
-        select tag.*, count(*) as value from tag inner join bind on
+    <select id="getTags" resultType="Tag">
+        select * from tag
+    </select>
+
+    <select id="getTagsByArticleId" resultType="Tag">
+        select tag.* from tag inner join bind on
         tag.id=bind.tid
-        group by tag.id
+        where bind.aid = #{article_id}
     </select>
 
     <select id="getTag" resultType="Tag">
@@ -35,4 +39,10 @@
             #{val}
         </foreach>
     </insert>
+
+    <select id="getTagStatistics" resultType="Map">
+        select tag.*, count(*) as value from tag inner join bind on
+        tag.id=bind.tid
+        group by tag.id
+    </select>
 </mapper>

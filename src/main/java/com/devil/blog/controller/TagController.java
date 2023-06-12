@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devil.blog.entity.Tag;
@@ -24,8 +25,8 @@ public class TagController {
     private TagService tagService = new TagServiceImpl();
 
     @GetMapping("/api/v1/tag")
-    public List<Map<String, Object>> getTags() {
-        return tagService.getTags();
+    public List<Tag> getTags(@RequestParam(defaultValue = "-1") int article_id) {
+        return tagService.getTags(article_id);
     }
 
     @GetMapping("/api/v1/tag/{id}")
@@ -54,5 +55,10 @@ public class TagController {
     @DeleteMapping("/api/v1/tag/{id}")
     public boolean deleteTag(@PathVariable("id") int id) {
         return tagService.deleteTag(id);
+    }
+
+    @GetMapping("/api/v1/tag/statistics")
+    public List<Map<String, Object>> getTags() {
+        return tagService.getTagStatistics();
     }
 }

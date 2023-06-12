@@ -21,8 +21,11 @@ public class TagServiceImpl implements TagService {
     private BindMapper bindMapper;
 
     @Override
-    public List<Map<String, Object>> getTags() {
-        return tagMapper.getTags();
+    public List<Tag> getTags(int article_id) {
+        if(article_id == -1) {
+            return tagMapper.getTags();
+        }
+        return tagMapper.getTagsByArticleId(article_id);
     }
 
     @Override
@@ -51,5 +54,10 @@ public class TagServiceImpl implements TagService {
     public boolean deleteTag(int id) {
         bindMapper.unbindArticles(id);
         return tagMapper.deleteTag(id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTagStatistics() {
+        return tagMapper.getTagStatistics();
     }
 }
