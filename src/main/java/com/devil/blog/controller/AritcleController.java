@@ -37,7 +37,7 @@ public class AritcleController {
     @Autowired
     private CategoryService categoryService = new CategoryServiceImpl();
 
-    @GetMapping("/api/v1/article")
+    @GetMapping("/api/v1/articles")
     public List<ArticleAbstract> getArticles(@RequestParam(defaultValue = "-1") int category_id, @RequestParam(defaultValue = "-1") int tag_id) {
         List<ArticleAbstract> abstracts = new ArrayList<ArticleAbstract>();
         if(category_id != -1 && tag_id != -1) {
@@ -70,25 +70,25 @@ public class AritcleController {
         return abstracts;
     }
 
-    @GetMapping("/api/v1/article/{id}")
+    @GetMapping("/api/v1/articles/{id}")
     public Article getArticle(@PathVariable("id") int id) {
         Article article = articleService.getArticle(id);
         return article;
     }
 
-    @PutMapping("/api/v1/article/{id}")
+    @PutMapping("/api/v1/articles/{id}")
     public boolean updateArticle(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
         System.out.println(map.toString());
         return articleService.updateArticle(id, map);
     }
 
-    @GetMapping("/api/v1/article/{id}/content")
+    @GetMapping("/api/v1/articles/{id}/content")
     public String getContent(@PathVariable("id") int id) {
         Article article = articleService.getArticle(id);
         return new String(article.getContent(), StandardCharsets.UTF_8);
     }
 
-    @PutMapping("/api/v1/article/{id}/content")
+    @PutMapping("/api/v1/articles/{id}/content")
     public boolean updateContent(@PathVariable("id") int id, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String name = multipartFile.getOriginalFilename();
         if(name != null) {
@@ -98,12 +98,12 @@ public class AritcleController {
         return articleService.updateContent(id, name, bytes);
     }
 
-    @PostMapping("/api/v1/article")
+    @PostMapping("/api/v1/articles")
     public int insertArticle(@RequestBody Map<String, Object> map) {
         return articleService.insertArticle(map);
     }
 
-    @DeleteMapping("/api/v1/article/{id}")
+    @DeleteMapping("/api/v1/articles/{id}")
     public Boolean deleteArticle(@PathVariable("id") int id) {
         return articleService.deleteArticle(id);
     }

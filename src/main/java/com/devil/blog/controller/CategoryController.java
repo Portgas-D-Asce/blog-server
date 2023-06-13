@@ -23,23 +23,23 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService = new CategoryServiceImpl();
 
-    @GetMapping("/api/v1/category/{id}")
+    @GetMapping("/api/v1/categories/{id}")
     public Category getCategory(@PathVariable("id") int id, @RequestParam(defaultValue = "true") String recursion) {
         Category category = categoryService.getCategory(id, new Boolean(recursion));
         return category;
     }
 
-    @PutMapping("/api/v1/category/{id}")
+    @PutMapping("/api/v1/categories/{id}")
     public boolean updateCategory(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
         return categoryService.updateCategory(id, map);
     }
 
-    @PostMapping("/api/v1/category")
+    @PostMapping("/api/v1/categories")
     public int insertCategory(@RequestBody Map<String, Object> map) {
         return categoryService.insertCategory(map);
     }
 
-    @DeleteMapping("/api/v1/category/{id}")
+    @DeleteMapping("/api/v1/categories/{id}")
     public boolean deleteCategory(@PathVariable("id") int id) {
         return categoryService.deleteCategory(id);
     }

@@ -24,7 +24,7 @@ public class ImageController {
     @Autowired
     private ImageService imageService = new ImageServiceImpl();
 
-    @GetMapping("/api/v1/image/{id}")
+    @GetMapping("/api/v1/images/{id}")
     public void getContent(@PathVariable("id") int id, HttpServletResponse response) throws IOException {
         Image image = imageService.getImage(id);
         response.setCharacterEncoding("UTF-8");
@@ -32,7 +32,7 @@ public class ImageController {
         response.getOutputStream().write(image.getContent());
     }
 
-    @PostMapping("/api/v1/image")
+    @PostMapping("/api/v1/images")
     public int insertImage(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String name = multipartFile.getOriginalFilename();
         if(name != null) {
@@ -44,7 +44,7 @@ public class ImageController {
         return imageService.insertImage(image);
     }
 
-    @DeleteMapping("/api/v1/image/{id}")
+    @DeleteMapping("/api/v1/images/{id}")
     public boolean deleteImage(@PathVariable("id") int id) {
         return imageService.deleteImage(id);
     }
