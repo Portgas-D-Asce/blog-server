@@ -1,28 +1,30 @@
 package com.devil.blog.entity;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Article {
     private int id;
     private int cid;
+    private List<Tag> tags;
     private String name;
     private String description;
     private Date date;
     private int read;
     private int upvoted;
     private int downvoted;
-    @JsonIgnore
     private byte[] content;
 
     public Article() {
     }
-    public Article(int id, int cid, String name, String description, Date date, int read, int upvoted, int downvoted,
+    public Article(int id, int cid, List<Tag> tags, String name, String description, Date date, int read, int upvoted, int downvoted,
             byte[] content) {
         this.id = id;
         this.cid = cid;
+        this.tags = tags;
         this.name = name;
         this.description = description;
         this.date = date;
@@ -42,6 +44,12 @@ public class Article {
     }
     public void setCid(int cid) {
         this.cid = cid;
+    }
+    public List<Tag> getTags() {
+        return tags;
+    }
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
     public String getName() {
         return name;
@@ -79,17 +87,17 @@ public class Article {
     public void setDownvoted(int downvoted) {
         this.downvoted = downvoted;
     }
-    public byte[] getContent() {
-        return content;
+    public String getContent() {
+        return new String(content, StandardCharsets.UTF_8);
     }
     public void setContent(byte[] content) {
         this.content = content;
-    } 
+    }
 
     @Override
     public String toString() {
-        return "Article [id=" + id + ", cid=" + cid + ", name=" + name + ", description=" + description + ", date="
-                + date + ", read=" + read + ", upvoted=" + upvoted + ", downvoted=" + downvoted + ", content="
-                + Arrays.toString(content) + "]";
-    }
+        return "Article [id=" + id + ", cid=" + cid + ", tags=" + tags + ", name=" + name + ", description="
+                + description + ", date=" + date + ", read=" + read + ", upvoted=" + upvoted + ", downvoted="
+                + downvoted + ", content=" + Arrays.toString(content) + "]";
+    } 
 }

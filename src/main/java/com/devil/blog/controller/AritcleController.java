@@ -1,8 +1,8 @@
 package com.devil.blog.controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -77,25 +77,34 @@ public class AritcleController {
     }
 
     @PutMapping("/api/v1/articles/{id}")
-    public boolean updateArticle(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
-        System.out.println(map.toString());
-        return articleService.updateArticle(id, map);
-    }
-
-    @GetMapping("/api/v1/articles/{id}/content")
-    public String getContent(@PathVariable("id") int id) {
-        Article article = articleService.getArticle(id);
-        return new String(article.getContent(), StandardCharsets.UTF_8);
-    }
-
-    @PutMapping("/api/v1/articles/{id}/content")
-    public boolean updateContent(@PathVariable("id") int id, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
-        String name = multipartFile.getOriginalFilename();
-        if(name != null) {
-            name = name.substring(0, name.lastIndexOf("."));
+    public boolean updateContent(
+            @PathVariable("id") int id, @RequestParam(value = "file", required = false) MultipartFile multipartFile,
+            @RequestParam(value = "cid", required = false) Integer cid,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "tags", required = false) String tags) throws IOException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(cid != null) {
+            map.put("cid", cid);
+            System.out.println(cid);
         }
-        byte[] bytes = multipartFile.getBytes();
-        return articleService.updateContent(id, name, bytes);
+
+        if(description != null) {
+            map.put("description", description);
+        }
+
+        if(multipartFile != null) {
+            map.put("content", multipartFile.getBytes());
+            String name = multipartFile.getOriginalFilename();
+            if(name != null) {
+                name = name.substring(0, name.lastIndexOf("."));
+                map.put("name", name);
+            }
+        }
+
+        if(tags != null) {
+            System.out.println(tags);
+        }
+        return articleService.updateArticle(id, map);
     }
 
     @PostMapping("/api/v1/articles")

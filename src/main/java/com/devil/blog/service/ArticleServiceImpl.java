@@ -79,11 +79,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public boolean updateContent(int id, String name, byte[] content) {
-        return articleMapper.updateContent(id, name, content);
-    }
-
-    @Override
     public int insertArticle(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();
         map.put("params", params);
