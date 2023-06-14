@@ -25,7 +25,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategory(int id, Boolean recursion) {
         if(recursion == false) {
             Category category = categoryMapper.getCategory(id);
-            System.out.println(category.toString());
             return category;
         }
 

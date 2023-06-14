@@ -44,7 +44,6 @@ public class AritcleController {
         Boolean flag_content = new Boolean(with_content);
         List<Article> abstracts = new ArrayList<Article>();
         if(category_id != -1 && tag_id != -1) {
-            System.out.println("category_id or tag_id, only can choose one!!!");
             return new ArrayList<Article>();
         }
 
@@ -88,7 +87,6 @@ public class AritcleController {
         Map<String, Object> map = new HashMap<String, Object>();
         if(cid != null) {
             map.put("cid", cid);
-            System.out.println(cid);
         }
 
         if(description != null) {
@@ -104,9 +102,6 @@ public class AritcleController {
             }
         }
 
-        if(tags != null) {
-            System.out.println(tags);
-        }
         return articleService.updateArticle(id, map);
     }
 

@@ -18,7 +18,6 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public int insertImage(Image image) {
-        System.out.println(image.toString());
         imageMapper.insertImage(image);
         return image.getId();
     }
