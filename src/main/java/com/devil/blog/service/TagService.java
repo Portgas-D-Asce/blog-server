@@ -7,6 +7,7 @@ import com.devil.blog.entity.Tag;
 
 public interface TagService {
     public List<Tag> getTags(int article_id);
+
     public Tag getTag(int id);
     public boolean updateTag(int id, Map<String, Object> map);
     public int insertTag(Map<String, Object> params);

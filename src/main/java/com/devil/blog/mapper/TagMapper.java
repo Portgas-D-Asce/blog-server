@@ -13,6 +13,7 @@ import com.devil.blog.entity.Tag;
 public interface TagMapper {
     public List<Tag> getTags();
     public List<Tag> getTagsByArticleId(int article_id);
+
     public Tag getTag(int id);
     public boolean updateTag(int id, Map<String, Object> map);
     public int insertTag(Map<String, Object> map);

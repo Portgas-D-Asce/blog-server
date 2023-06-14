@@ -79,7 +79,7 @@ public class AritcleController {
     }
 
     @PutMapping("/api/v1/articles/{id}")
-    public boolean updateContent(
+    public boolean updateArticle(
             @PathVariable("id") int id, @RequestParam(value = "file", required = false) MultipartFile multipartFile,
             @RequestParam(value = "cid", required = false) Integer cid,
             @RequestParam(value = "description", required = false) String description,

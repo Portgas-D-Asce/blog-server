@@ -12,6 +12,7 @@ import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Tag;
 import com.devil.blog.mapper.ArticleMapper;
 import com.devil.blog.mapper.BindMapper;
+import com.devil.blog.mapper.TagMapper;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -19,6 +20,8 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleMapper articleMapper;
     @Autowired
     private BindMapper bindMapper;
+    @Autowired
+    private TagMapper tagMapper;
 
     @Override
     public List<Article> getArticlesByCategoryIds(List<Integer> ids, Boolean with_content) {
@@ -27,7 +30,7 @@ public class ArticleServiceImpl implements ArticleService {
             if(with_content == false) {
                 article.setContent(null);
             }
-            List<Tag> tags = articleMapper.getTags(article.getId());
+            List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
             article.setTags(tags);
         }
         return articles;
@@ -40,7 +43,7 @@ public class ArticleServiceImpl implements ArticleService {
             if(with_content == false) {
                 article.setContent(null);
             }
-            List<Tag> tags = articleMapper.getTags(article.getId());
+            List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
             article.setTags(tags);
         }
         return articles;
