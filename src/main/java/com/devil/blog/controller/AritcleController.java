@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Category;
-import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.service.ArticleService;
 import com.devil.blog.service.ArticleServiceImpl;
 import com.devil.blog.service.CategoryService;
@@ -38,15 +37,19 @@ public class AritcleController {
     private CategoryService categoryService = new CategoryServiceImpl();
 
     @GetMapping("/api/v1/articles")
-    public List<ArticleAbstract> getArticles(@RequestParam(defaultValue = "-1") int category_id, @RequestParam(defaultValue = "-1") int tag_id) {
-        List<ArticleAbstract> abstracts = new ArrayList<ArticleAbstract>();
+    public List<Article> getArticles(
+            @RequestParam(defaultValue = "-1") int category_id,
+            @RequestParam(defaultValue = "-1") int tag_id,
+            @RequestParam(defaultValue = "false") String with_content) {
+        Boolean flag_content = new Boolean(with_content);
+        List<Article> abstracts = new ArrayList<Article>();
         if(category_id != -1 && tag_id != -1) {
             System.out.println("category_id or tag_id, only can choose one!!!");
-            return new ArrayList<ArticleAbstract>();
+            return new ArrayList<Article>();
         }
 
         if(tag_id != -1) {
-            abstracts = articleService.getAbstractsByTagId(tag_id);
+            abstracts = articleService.getArticlesByTagId(tag_id, flag_content);
             return abstracts;
         } 
 
@@ -66,7 +69,7 @@ public class AritcleController {
             que.poll();
         }
 
-        abstracts = articleService.getAbstractsByCategoryIds(ids);
+        abstracts = articleService.getArticlesByCategoryIds(ids, flag_content);
         return abstracts;
     }
 

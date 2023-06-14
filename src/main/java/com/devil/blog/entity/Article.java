@@ -1,6 +1,5 @@
 package com.devil.blog.entity;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -87,8 +86,8 @@ public class Article {
     public void setDownvoted(int downvoted) {
         this.downvoted = downvoted;
     }
-    public String getContent() {
-        return new String(content, StandardCharsets.UTF_8);
+    public byte[] getContent() {
+        return content;
     }
     public void setContent(byte[] content) {
         this.content = content;

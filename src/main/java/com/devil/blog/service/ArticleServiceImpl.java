@@ -1,6 +1,5 @@
 package com.devil.blog.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Tag;
-import com.devil.blog.entity.model.ArticleAbstract;
 import com.devil.blog.mapper.ArticleMapper;
 import com.devil.blog.mapper.BindMapper;
 
@@ -23,48 +21,29 @@ public class ArticleServiceImpl implements ArticleService {
     private BindMapper bindMapper;
 
     @Override
-    public List<ArticleAbstract> getAbstractsByCategoryIds(List<Integer> ids) {
-                System.out.println(ids.toString());
-
+    public List<Article> getArticlesByCategoryIds(List<Integer> ids, Boolean with_content) {
         List<Article> articles = articleMapper.getArticlesByCategoryIds(ids);
-        System.out.println(articles.toString());
-
-        List<ArticleAbstract> abstracts = new ArrayList<>();
         for(Article article : articles) {
-            ArticleAbstract articleAbstract = new ArticleAbstract();
-            articleAbstract.setId(article.getId());
-            articleAbstract.setName(article.getName());
-            articleAbstract.setDescription(article.getDescription());
-            articleAbstract.setDate(article.getDate());
-            articleAbstract.setRead(article.getRead());
-            articleAbstract.setUpvoted(article.getUpvoted());
-            articleAbstract.setDownvoted(article.getDownvoted());
+            if(with_content == false) {
+                article.setContent(null);
+            }
             List<Tag> tags = articleMapper.getTags(article.getId());
-            articleAbstract.setTags(tags);
-            abstracts.add(articleAbstract);
+            article.setTags(tags);
         }
-        return abstracts;
+        return articles;
     }
 
     @Override
-    public List<ArticleAbstract> getAbstractsByTagId(int id) {
+    public List<Article> getArticlesByTagId(int id, Boolean with_content) {
         List<Article> articles = articleMapper.getArticlesByTagId(id);
-        System.out.println(articles.toString());
-        List<ArticleAbstract> abstracts = new ArrayList<>();
         for(Article article : articles) {
-            ArticleAbstract articleAbstract = new ArticleAbstract();
-            articleAbstract.setId(article.getId());
-            articleAbstract.setName(article.getName());
-            articleAbstract.setDescription(article.getDescription());
-            articleAbstract.setDate(article.getDate());
-            articleAbstract.setRead(article.getRead());
-            articleAbstract.setUpvoted(article.getUpvoted());
-            articleAbstract.setDownvoted(article.getDownvoted());
+            if(with_content == false) {
+                article.setContent(null);
+            }
             List<Tag> tags = articleMapper.getTags(article.getId());
-            articleAbstract.setTags(tags);
-            abstracts.add(articleAbstract);
+            article.setTags(tags);
         }
-        return abstracts;
+        return articles;
     }
 
     @Override
