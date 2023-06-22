@@ -25,7 +25,7 @@ public class ImageController {
     private ImageService imageService = new ImageServiceImpl();
 
     @GetMapping("/api/v1/images/{id}")
-    public void getContent(@PathVariable("id") int id, HttpServletResponse response) throws IOException {
+    public void getContent(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException {
         Image image = imageService.getImage(id);
         response.setCharacterEncoding("UTF-8");
         response.setContentType(image.getType());
@@ -45,7 +45,7 @@ public class ImageController {
     }
 
     @DeleteMapping("/api/v1/images/{id}")
-    public boolean deleteImage(@PathVariable("id") int id) {
+    public boolean deleteImage(@PathVariable("id") Integer id) {
         return imageService.deleteImage(id);
     }
 }

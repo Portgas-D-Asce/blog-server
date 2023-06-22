@@ -25,18 +25,21 @@ public class TagController {
     private TagService tagService = new TagServiceImpl();
 
     @GetMapping("/api/v1/tags")
-    public List<Tag> getTags(@RequestParam(defaultValue = "-1") int article_id) {
+    public List<Tag> getTags(@RequestParam(required = false) Integer article_id) {
+        if(article_id == null) {
+            article_id = -1;
+        }
         return tagService.getTags(article_id);
     }
 
     @GetMapping("/api/v1/tags/{id}")
-    public Tag getTag(@PathVariable("id") int id) {
+    public Tag getTag(@PathVariable("id") Integer id) {
         Tag tag = tagService.getTag(id);
         return tag;
     }
 
     @PutMapping("/api/v1/tags/{id}")
-    public boolean updateTag(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
+    public boolean updateTag(@PathVariable("id") Integer id, @RequestBody Map<String, Object> map) {
         return tagService.updateTag(id, map);
     }
 
@@ -53,7 +56,7 @@ public class TagController {
     }
 
     @DeleteMapping("/api/v1/tags/{id}")
-    public boolean deleteTag(@PathVariable("id") int id) {
+    public boolean deleteTag(@PathVariable("id") Integer id) {
         return tagService.deleteTag(id);
     }
 

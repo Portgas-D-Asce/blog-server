@@ -24,13 +24,16 @@ public class CategoryController {
     private CategoryService categoryService = new CategoryServiceImpl();
 
     @GetMapping("/api/v1/categories/{id}")
-    public Category getCategory(@PathVariable("id") int id, @RequestParam(defaultValue = "true") String recursion) {
+    public Category getCategory(@PathVariable("id") Integer id, @RequestParam(required = false) String recursion) {
+        if(recursion == null) {
+            recursion = "true";
+        }
         Category category = categoryService.getCategory(id, new Boolean(recursion));
         return category;
     }
 
     @PutMapping("/api/v1/categories/{id}")
-    public boolean updateCategory(@PathVariable("id") int id, @RequestBody Map<String, Object> map) {
+    public boolean updateCategory(@PathVariable("id") Integer id, @RequestBody Map<String, Object> map) {
         return categoryService.updateCategory(id, map);
     }
 
@@ -40,7 +43,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/api/v1/categories/{id}")
-    public boolean deleteCategory(@PathVariable("id") int id) {
+    public boolean deleteCategory(@PathVariable("id") Integer id) {
         return categoryService.deleteCategory(id);
     }
 }

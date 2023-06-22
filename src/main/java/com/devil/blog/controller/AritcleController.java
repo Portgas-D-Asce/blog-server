@@ -38,21 +38,24 @@ public class AritcleController {
 
     @GetMapping("/api/v1/articles")
     public List<Article> getArticles(
-            @RequestParam(defaultValue = "-1") int category_id,
-            @RequestParam(defaultValue = "-1") int tag_id,
-            @RequestParam(defaultValue = "false") String with_content) {
-        Boolean flag_content = new Boolean(with_content);
-        List<Article> abstracts = new ArrayList<Article>();
-        if(category_id != -1 && tag_id != -1) {
-            return new ArrayList<Article>();
+            @RequestParam(required = false) Integer category_id,
+            @RequestParam(required = false) Integer tag_id,
+            @RequestParam(required = false) String with_content) {
+        Boolean flag_content = false;
+        if(with_content != null) {
+            flag_content = new Boolean(with_content);
         }
 
-        if(tag_id != -1) {
+        List<Article> abstracts = new ArrayList<Article>();
+        System.out.println(category_id);
+        System.out.println(tag_id);
+
+        if(tag_id != null) {
             abstracts = articleService.getArticlesByTagId(tag_id, flag_content);
             return abstracts;
         } 
 
-        if(category_id == -1) {
+        if(category_id == null) {
             category_id = 0;
         }
         Category root = categoryService.getCategory(category_id, true);
@@ -73,14 +76,14 @@ public class AritcleController {
     }
 
     @GetMapping("/api/v1/articles/{id}")
-    public Article getArticle(@PathVariable("id") int id) {
+    public Article getArticle(@PathVariable("id") Integer id) {
         Article article = articleService.getArticle(id);
         return article;
     }
 
     @PutMapping("/api/v1/articles/{id}")
     public boolean updateArticle(
-            @PathVariable("id") int id, @RequestParam(value = "file", required = false) MultipartFile multipartFile,
+            @PathVariable("id") Integer id, @RequestParam(value = "file", required = false) MultipartFile multipartFile,
             @RequestParam(value = "cid", required = false) Integer cid,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "tags", required = false) String tags) throws IOException {
@@ -111,7 +114,7 @@ public class AritcleController {
     }
 
     @DeleteMapping("/api/v1/articles/{id}")
-    public Boolean deleteArticle(@PathVariable("id") int id) {
+    public Boolean deleteArticle(@PathVariable("id") Integer id) {
         return articleService.deleteArticle(id);
     }
 }
