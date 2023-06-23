@@ -7,7 +7,8 @@ import com.devil.blog.entity.Article;
 
 
 public interface ArticleService {
-    public List<Article> getArticlesByCategoryIds(List<Integer> ids, Boolean with_content);
+    public List<Article> getAllArticles(Boolean with_content);
+    public List<Article> getArticlesByCategoryId(int id, Boolean with_content);
     public List<Article> getArticlesByTagId(int id, Boolean with_content);
 
     public Article getArticle(int id);

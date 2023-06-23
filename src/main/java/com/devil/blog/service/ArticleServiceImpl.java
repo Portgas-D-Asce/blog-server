@@ -24,29 +24,21 @@ public class ArticleServiceImpl implements ArticleService {
     private TagMapper tagMapper;
 
     @Override
-    public List<Article> getArticlesByCategoryIds(List<Integer> ids, Boolean with_content) {
-        List<Article> articles = articleMapper.getArticlesByCategoryIds(ids);
-        for(Article article : articles) {
-            if(with_content == false) {
-                article.setContent(null);
-            }
-            List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
-            article.setTags(tags);
-        }
-        return articles;
+    public List<Article> getAllArticles(Boolean with_content) {
+        List<Article> articles = articleMapper.getArticles();
+        return fillArticles(articles, with_content);
+    }
+
+    @Override
+    public List<Article> getArticlesByCategoryId(int id, Boolean with_content) {
+        List<Article> articles = articleMapper.getArticlesByCategoryId(id);
+        return fillArticles(articles, with_content);
     }
 
     @Override
     public List<Article> getArticlesByTagId(int id, Boolean with_content) {
         List<Article> articles = articleMapper.getArticlesByTagId(id);
-        for(Article article : articles) {
-            if(with_content == false) {
-                article.setContent(null);
-            }
-            List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
-            article.setTags(tags);
-        }
-        return articles;
+        return fillArticles(articles, with_content);
     }
 
     @Override
@@ -76,5 +68,16 @@ public class ArticleServiceImpl implements ArticleService {
 
         boolean res = articleMapper.deleteArticle(id);
         return res;
+    }
+
+    private List<Article> fillArticles(List<Article> articles, Boolean with_content) {
+        for(Article article : articles) {
+            if(with_content == false) {
+                article.setContent(null);
+            }
+            List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
+            article.setTags(tags);
+        }
+        return articles;
     }
 }

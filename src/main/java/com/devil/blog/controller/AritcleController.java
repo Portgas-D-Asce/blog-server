@@ -3,10 +3,8 @@ package com.devil.blog.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.devil.blog.entity.Article;
-import com.devil.blog.entity.Category;
 import com.devil.blog.service.ArticleService;
 import com.devil.blog.service.ArticleServiceImpl;
 import com.devil.blog.service.CategoryService;
@@ -46,34 +43,28 @@ public class AritcleController {
             flag_content = new Boolean(with_content);
         }
 
-        List<Article> abstracts = new ArrayList<Article>();
-        System.out.println(category_id);
-        System.out.println(tag_id);
+        //currently, nobody need us to do this
+        if(category_id != null && tag_id != null) {
+            System.out.println("not support by category_id and tag_id together");
+            return new ArrayList<Article>();
+        }
 
         if(tag_id != null) {
-            abstracts = articleService.getArticlesByTagId(tag_id, flag_content);
-            return abstracts;
+            return articleService.getArticlesByTagId(tag_id, flag_content);
         } 
 
-        if(category_id == null) {
-            category_id = 0;
-        }
-        Category root = categoryService.getCategoryRecurively(category_id);
-        Queue<Category> que = new LinkedList<>();
-        que.add(root);
-        List<Integer> ids = new ArrayList<>();
-        while(!que.isEmpty()) {
-            Category u = que.peek();
-            ids.add(u.getId());
-            for(Category v : u.getChildren()) {
-                que.add(v);
+        if(category_id != null) {
+            List<Article> articles = new ArrayList<Article>();
+            List<Integer> ids = categoryService.getDescendants(category_id);
+            for(Integer id : ids) {
+                List<Article> temp = articleService.getArticlesByCategoryId(id, flag_content);
+                articles.addAll(temp);
             }
-            que.poll();
+            return articles;
         }
 
-        abstracts = articleService.getArticlesByCategoryIds(ids, flag_content);
-        return abstracts;
-    }
+        return articleService.getAllArticles(flag_content);
+   }
 
     @GetMapping("/api/v1/articles/{id}")
     public Article getArticle(@PathVariable("id") Integer id) {

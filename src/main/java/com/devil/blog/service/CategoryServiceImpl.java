@@ -2,8 +2,10 @@ package com.devil.blog.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,5 +62,23 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean deleteCategoryRecursively(int id) {
         return categoryMapper.deleteCategory(id);
+    }
+
+    @Override
+    public List<Integer> getDescendants(int id) {
+        Category root = getCategoryRecurively(id);
+        Queue<Category> que = new LinkedList<>();
+        que.add(root);
+        List<Integer> descendants = new ArrayList<>();
+        while(!que.isEmpty()) {
+            Category u = que.peek();
+            descendants.add(u.getId());
+            for(Category v : u.getChildren()) {
+                que.add(v);
+            }
+            que.poll();
+        }
+
+        return descendants;
     }
 }
