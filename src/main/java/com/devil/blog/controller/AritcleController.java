@@ -58,7 +58,7 @@ public class AritcleController {
         if(category_id == null) {
             category_id = 0;
         }
-        Category root = categoryService.getCategory(category_id, true);
+        Category root = categoryService.getCategoryRecurively(category_id);
         Queue<Category> que = new LinkedList<>();
         que.add(root);
         List<Integer> ids = new ArrayList<>();

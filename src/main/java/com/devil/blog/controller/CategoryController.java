@@ -25,11 +25,10 @@ public class CategoryController {
 
     @GetMapping("/api/v1/categories/{id}")
     public Category getCategory(@PathVariable("id") Integer id, @RequestParam(required = false) String recursion) {
-        if(recursion == null) {
-            recursion = "true";
+        if(recursion == null || recursion == "true") {
+            return categoryService.getCategoryRecurively(id);
         }
-        Category category = categoryService.getCategory(id, new Boolean(recursion));
-        return category;
+        return categoryService.getCategory(id);
     }
 
     @PutMapping("/api/v1/categories/{id}")

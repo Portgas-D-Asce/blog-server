@@ -22,12 +22,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategory(int id, Boolean recursion) {
-        if(recursion == false) {
-            Category category = categoryMapper.getCategory(id);
-            return category;
-        }
+    public Category getCategory(int id) {
+        Category category = categoryMapper.getCategory(id);
+        return category;
+    }
 
+    @Override
+    public Category getCategoryRecurively(int id) {
         List<Category> categories = categoryMapper.getCategories();
         Category root = null;
         HashMap<Integer, Category> hmp = new HashMap<>();
@@ -45,8 +46,8 @@ public class CategoryServiceImpl implements CategoryService {
             hmp.get(pid).getChildren().add(hmp.get(cid));
         }
         return root;
-    }
 
+    }
     @Override
     public int insertCategory(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();
@@ -60,5 +61,4 @@ public class CategoryServiceImpl implements CategoryService {
     public boolean deleteCategory(int id) {
         return categoryMapper.deleteCategory(id);
     }
-
 }
