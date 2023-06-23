@@ -17,7 +17,7 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public boolean updateCategory(int id, Map<String, Object> map) {
+    public boolean updateCategoryRecursively(int id, Map<String, Object> map) {
         return categoryMapper.updateCategory(id, map);
     }
 
@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
     @Override
-    public int insertCategory(Map<String, Object> params) {
+    public int insertCategoryRecursively(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();
         map.put("params", params);
         categoryMapper.insertCategory(map);
@@ -58,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean deleteCategory(int id) {
+    public boolean deleteCategoryRecursively(int id) {
         return categoryMapper.deleteCategory(id);
     }
 }

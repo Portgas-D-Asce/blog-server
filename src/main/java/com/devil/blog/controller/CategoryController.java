@@ -33,16 +33,16 @@ public class CategoryController {
 
     @PutMapping("/api/v1/categories/{id}")
     public boolean updateCategory(@PathVariable("id") Integer id, @RequestBody Map<String, Object> map) {
-        return categoryService.updateCategory(id, map);
+        return categoryService.updateCategoryRecursively(id, map);
     }
 
     @PostMapping("/api/v1/categories")
     public int insertCategory(@RequestBody Map<String, Object> map) {
-        return categoryService.insertCategory(map);
+        return categoryService.insertCategoryRecursively(map);
     }
 
     @DeleteMapping("/api/v1/categories/{id}")
     public boolean deleteCategory(@PathVariable("id") Integer id) {
-        return categoryService.deleteCategory(id);
+        return categoryService.deleteCategoryRecursively(id);
     }
 }
