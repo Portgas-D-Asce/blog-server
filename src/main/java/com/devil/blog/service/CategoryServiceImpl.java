@@ -19,11 +19,6 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public boolean updateCategoryRecursively(int id, Map<String, Object> map) {
-        return categoryMapper.updateCategory(id, map);
-    }
-
-    @Override
     public Category getCategory(int id) {
         Category category = categoryMapper.getCategory(id);
         return category;
@@ -31,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryRecurively(int id) {
-        List<Category> categories = categoryMapper.getCategories();
+        List<Category> categories = categoryMapper.getAllCategories();
         Category root = null;
         HashMap<Integer, Category> hmp = new HashMap<>();
         for(Category category : categories) {
@@ -50,6 +45,12 @@ public class CategoryServiceImpl implements CategoryService {
         return root;
 
     }
+
+    @Override
+    public boolean updateCategoryRecursively(int id, Map<String, Object> map) {
+        return categoryMapper.updateCategory(id, map);
+    }
+
     @Override
     public int insertCategoryRecursively(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();

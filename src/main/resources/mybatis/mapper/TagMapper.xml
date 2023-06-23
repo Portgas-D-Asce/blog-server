@@ -3,7 +3,11 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devil.blog.mapper.TagMapper">
-    <select id="getTags" resultType="Tag">
+    <select id="getTag" resultType="Tag">
+        select * from tag where id = #{id}
+    </select>
+
+    <select id="getAllTags" resultType="Tag">
         select * from tag
     </select>
 
@@ -13,10 +17,6 @@
         where bind.aid = #{article_id}
     </select>
 
-    <select id="getTag" resultType="Tag">
-        select * from tag where id = #{id}
-    </select>
-
     <update id="updateTag" parameterType="Map">
         update tag set 
         <foreach collection="map" separator=", " item="val" index="key" open=" " close=" ">
@@ -24,10 +24,6 @@
         </foreach>
         where id = #{id}
     </update>
-
-    <delete id="deleteTag">
-        delete from tag where id = #{id}
-    </delete>
 
     <insert id="insertTag" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
         insert into tag 
@@ -40,9 +36,24 @@
         </foreach>
     </insert>
 
+    <delete id="deleteTag">
+        delete from tag where id = #{id}
+    </delete>
+
     <select id="getTagStatistics" resultType="Map">
         select tag.*, count(*) as value from tag inner join bind on
         tag.id=bind.tid
         group by tag.id
     </select>
+
+    <insert id="bindArticles">
+        insert into bind(tid, aid) values
+        <foreach collection="aids" item="aid" index="index">
+            <if test="index!=0">,</if> (#{tid}, #{aid})
+        </foreach>
+    </insert>
+
+    <delete id="unbindArticles">
+        delete from bind where tid = #{tid}
+    </delete>
 </mapper>

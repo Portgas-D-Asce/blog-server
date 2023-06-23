@@ -3,12 +3,12 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.devil.blog.mapper.ArticleMapper">
-    <select id="getArticles" resultType="Article">
-        select * from article
-    </select>
-
     <select id="getArticle" resultType="Article">
         select * from article where id = #{id}
+    </select>
+
+    <select id="getAllArticles" resultType="Article">
+        select * from article
     </select>
 
     <select id="getArticlesByCategoryId" resultType="Article">
@@ -22,8 +22,6 @@
         bind.tid = #{id}
     </select>
 
-    
-
     <update id="updateArticle" parameterType="Map">
         update article set 
         <foreach collection="map.entrySet()" separator=", " item="val" index="key" open=" " close=" ">
@@ -31,10 +29,6 @@
         </foreach>
         where id = #{id}
     </update>
-
-    <delete id="deleteArticle">
-        delete from article where id = #{id}
-    </delete>
 
     <insert id="insertArticle" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
         insert into article 
@@ -46,4 +40,19 @@
             #{val}
         </foreach>
     </insert>
+
+    <delete id="deleteArticle">
+        delete from article where id = #{id}
+    </delete>
+
+    <insert id="bindTags">
+        insert into bind(tid, aid) values
+        <foreach collection="tids" item="tid" index="index">
+            <if test="index!=0">,</if> (#{tid}, #{aid})
+        </foreach>
+    </insert>
+
+    <delete id="unbindTags">
+        delete from bind where aid = #{aid}
+    </delete>
 </mapper>

@@ -11,21 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devil.blog.entity.Article;
 import com.devil.blog.entity.Tag;
 import com.devil.blog.mapper.ArticleMapper;
-import com.devil.blog.mapper.BindMapper;
 import com.devil.blog.mapper.TagMapper;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
-    @Autowired
-    private BindMapper bindMapper;
+
     @Autowired
     private TagMapper tagMapper;
 
     @Override
+    public Article getArticle(int id) {
+        Article article = articleMapper.getArticle(id);
+        return article;
+    }
+
+    @Override
     public List<Article> getAllArticles(Boolean with_content) {
-        List<Article> articles = articleMapper.getArticles();
+        List<Article> articles = articleMapper.getAllArticles();
         return fillArticles(articles, with_content);
     }
 
@@ -39,12 +43,6 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> getArticlesByTagId(int id, Boolean with_content) {
         List<Article> articles = articleMapper.getArticlesByTagId(id);
         return fillArticles(articles, with_content);
-    }
-
-    @Override
-    public Article getArticle(int id) {
-        Article article = articleMapper.getArticle(id);
-        return article;
     }
 
     @Override
@@ -64,7 +62,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public boolean deleteArticle(int id) {
-        bindMapper.unbindTags(id);
+        articleMapper.unbindTags(id);
 
         boolean res = articleMapper.deleteArticle(id);
         return res;

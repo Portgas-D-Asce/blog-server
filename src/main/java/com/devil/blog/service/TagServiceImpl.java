@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devil.blog.entity.Tag;
-import com.devil.blog.mapper.BindMapper;
 import com.devil.blog.mapper.TagMapper;
 
 @Service
@@ -17,23 +16,20 @@ public class TagServiceImpl implements TagService {
     @Autowired
     private TagMapper tagMapper;
 
-    @Autowired
-    private BindMapper bindMapper;
+    @Override
+    public Tag getTag(int id) {
+        Tag tag = tagMapper.getTag(id);
+        return tag;
+    }
 
     @Override
     public List<Tag> getAllTags() {
-        return tagMapper.getTags();
+        return tagMapper.getAllTags();
     }
 
     @Override
     public List<Tag> getTagsByArticleId(int article_id) {
         return tagMapper.getTagsByArticleId(article_id);
-    }
-
-    @Override
-    public Tag getTag(int id) {
-        Tag tag = tagMapper.getTag(id);
-        return tag;
     }
 
     @Override
@@ -54,12 +50,12 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public boolean deleteTag(int id) {
-        bindMapper.unbindArticles(id);
+        tagMapper.unbindArticles(id);
         return tagMapper.deleteTag(id);
     }
 
     @Override
-    public List<Map<String, Object>> getTagStatistics() {
-        return tagMapper.getTagStatistics();
+    public List<Map<String, Object>> getTagsStatistics() {
+        return tagMapper.getTagsStatistics();
     }
 }

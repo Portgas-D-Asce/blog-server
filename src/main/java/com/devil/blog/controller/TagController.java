@@ -24,18 +24,18 @@ public class TagController {
     @Autowired
     private TagService tagService = new TagServiceImpl();
 
+    @GetMapping("/api/v1/tags/{id}")
+    public Tag getTag(@PathVariable("id") Integer id) {
+        Tag tag = tagService.getTag(id);
+        return tag;
+    }
+
     @GetMapping("/api/v1/tags")
     public List<Tag> getTags(@RequestParam(required = false) Integer article_id) {
         if(article_id == null) {
             return tagService.getAllTags();
         }
         return tagService.getTagsByArticleId(article_id);
-    }
-
-    @GetMapping("/api/v1/tags/{id}")
-    public Tag getTag(@PathVariable("id") Integer id) {
-        Tag tag = tagService.getTag(id);
-        return tag;
     }
 
     @PutMapping("/api/v1/tags/{id}")
@@ -61,7 +61,7 @@ public class TagController {
     }
 
     @GetMapping("/api/v1/tags/statistics")
-    public List<Map<String, Object>> getTags() {
-        return tagService.getTagStatistics();
+    public List<Map<String, Object>> getTagsStatistics() {
+        return tagService.getTagsStatistics();
     }
 }

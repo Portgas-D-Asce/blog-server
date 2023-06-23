@@ -33,6 +33,12 @@ public class AritcleController {
     @Autowired
     private CategoryService categoryService = new CategoryServiceImpl();
 
+    @GetMapping("/api/v1/articles/{id}")
+    public Article getArticle(@PathVariable("id") Integer id) {
+        Article article = articleService.getArticle(id);
+        return article;
+    }
+
     @GetMapping("/api/v1/articles")
     public List<Article> getArticles(
             @RequestParam(required = false) Integer category_id,
@@ -65,12 +71,6 @@ public class AritcleController {
 
         return articleService.getAllArticles(flag_content);
    }
-
-    @GetMapping("/api/v1/articles/{id}")
-    public Article getArticle(@PathVariable("id") Integer id) {
-        Article article = articleService.getArticle(id);
-        return article;
-    }
 
     @PutMapping("/api/v1/articles/{id}")
     public boolean updateArticle(
