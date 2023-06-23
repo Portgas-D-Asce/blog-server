@@ -21,10 +21,12 @@ public class TagServiceImpl implements TagService {
     private BindMapper bindMapper;
 
     @Override
-    public List<Tag> getTags(int article_id) {
-        if(article_id == -1) {
-            return tagMapper.getTags();
-        }
+    public List<Tag> getAllTags() {
+        return tagMapper.getTags();
+    }
+
+    @Override
+    public List<Tag> getTagsByArticleId(int article_id) {
         return tagMapper.getTagsByArticleId(article_id);
     }
 

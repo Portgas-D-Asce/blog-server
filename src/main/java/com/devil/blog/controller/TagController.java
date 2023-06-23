@@ -27,9 +27,9 @@ public class TagController {
     @GetMapping("/api/v1/tags")
     public List<Tag> getTags(@RequestParam(required = false) Integer article_id) {
         if(article_id == null) {
-            article_id = -1;
+            return tagService.getAllTags();
         }
-        return tagService.getTags(article_id);
+        return tagService.getTagsByArticleId(article_id);
     }
 
     @GetMapping("/api/v1/tags/{id}")

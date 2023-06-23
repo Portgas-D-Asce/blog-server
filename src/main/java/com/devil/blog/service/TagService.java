@@ -6,7 +6,8 @@ import java.util.Map;
 import com.devil.blog.entity.Tag;
 
 public interface TagService {
-    public List<Tag> getTags(int article_id);
+    public List<Tag> getTagsByArticleId(int article_id);
+    public List<Tag> getAllTags();
 
     public Tag getTag(int id);
     public boolean updateTag(int id, Map<String, Object> map);
