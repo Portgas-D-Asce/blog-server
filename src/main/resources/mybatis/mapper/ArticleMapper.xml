@@ -7,6 +7,10 @@
         select * from article where id = #{id}
     </select>
 
+    <select id="getArticleByName" resultType="Article">
+        select * from article where name = #{name}
+    </select>
+
     <select id="getAllArticles" resultType="Article">
         select * from article
     </select>

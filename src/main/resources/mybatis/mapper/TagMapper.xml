@@ -40,7 +40,7 @@
         delete from tag where id = #{id}
     </delete>
 
-    <select id="getTagStatistics" resultType="Map">
+    <select id="getTagsStatistics" resultType="Map">
         select tag.*, count(*) as value from tag inner join bind on
         tag.id=bind.tid
         group by tag.id

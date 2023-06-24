@@ -42,14 +42,17 @@ public class TagServiceImpl implements TagService {
     public int insertTag(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();
         map.put("params", params);
-        tagMapper.insertTag(map);
-        String sid = map.get("id").toString();
-        return Integer.parseInt(sid);
+        return tagMapper.insertTag(map);
+    }
+
+    @Override
+    public boolean deleteTag(int id) {
+        return tagMapper.deleteTag(id);
     }
 
     @Override
     @Transactional
-    public boolean deleteTag(int id) {
+    public boolean deleteTagForcely(int id) {
         tagMapper.unbindArticles(id);
         return tagMapper.deleteTag(id);
     }

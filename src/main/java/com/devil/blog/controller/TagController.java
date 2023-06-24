@@ -26,8 +26,7 @@ public class TagController {
 
     @GetMapping("/api/v1/tags/{id}")
     public Tag getTag(@PathVariable("id") Integer id) {
-        Tag tag = tagService.getTag(id);
-        return tag;
+        return tagService.getTag(id);
     }
 
     @GetMapping("/api/v1/tags")
@@ -56,7 +55,10 @@ public class TagController {
     }
 
     @DeleteMapping("/api/v1/tags/{id}")
-    public boolean deleteTag(@PathVariable("id") Integer id) {
+    public boolean deleteTag(@PathVariable("id") Integer id, @RequestParam(required = false) String force) {
+        if(force != null && force.equals("true")) {
+            return tagService.deleteTagForcely(id);
+        }
         return tagService.deleteTag(id);
     }
 

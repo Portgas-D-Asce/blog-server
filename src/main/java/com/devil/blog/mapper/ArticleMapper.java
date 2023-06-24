@@ -12,6 +12,8 @@ import com.devil.blog.entity.Article;
 @Repository
 public interface ArticleMapper {
     public Article getArticle(int id);
+    public Article getArticleByName(String name);
+
     public List<Article> getAllArticles();
     public List<Article> getArticlesByCategoryId(int id);
     public List<Article> getArticlesByTagId(int id);

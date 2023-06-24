@@ -11,8 +11,11 @@ public interface TagService {
     public List<Tag> getTagsByArticleId(int article_id);
 
     public boolean updateTag(int id, Map<String, Object> map);
+
     public int insertTag(Map<String, Object> params);
+
     public boolean deleteTag(int id);
+    public boolean deleteTagForcely(int id);
 
     public List<Map<String, Object>> getTagsStatistics();
 }

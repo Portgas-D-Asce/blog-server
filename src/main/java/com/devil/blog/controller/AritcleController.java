@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.devil.blog.entity.Article;
+import com.devil.blog.entity.Category;
 import com.devil.blog.service.ArticleService;
 import com.devil.blog.service.ArticleServiceImpl;
 import com.devil.blog.service.CategoryService;
@@ -35,18 +35,24 @@ public class AritcleController {
 
     @GetMapping("/api/v1/articles/{id}")
     public Article getArticle(@PathVariable("id") Integer id) {
-        Article article = articleService.getArticle(id);
-        return article;
+        return articleService.getArticle(id);
     }
 
     @GetMapping("/api/v1/articles")
     public List<Article> getArticles(
             @RequestParam(required = false) Integer category_id,
             @RequestParam(required = false) Integer tag_id,
+            @RequestParam(required = false) String article_name,
             @RequestParam(required = false) String with_content) {
         Boolean flag_content = false;
         if(with_content != null) {
             flag_content = new Boolean(with_content);
+        }
+
+        if(article_name != null) {
+            List<Article> articles = new ArrayList<Article>();
+            articles.add(articleService.getArticleByName(article_name));
+            return articles;
         }
 
         //currently, nobody need us to do this
@@ -61,9 +67,10 @@ public class AritcleController {
 
         if(category_id != null) {
             List<Article> articles = new ArrayList<Article>();
-            List<Integer> ids = categoryService.getDescendants(category_id);
-            for(Integer id : ids) {
-                List<Article> temp = articleService.getArticlesByCategoryId(id, flag_content);
+            Category root = categoryService.getCategoryRecurively(category_id);
+            List<Category> descendants = categoryService.getDescendants(root);
+            for(Category category : descendants) {
+                List<Article> temp = articleService.getArticlesByCategoryId(category.getId(), flag_content);
                 articles.addAll(temp);
             }
             return articles;
@@ -79,14 +86,6 @@ public class AritcleController {
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "tags", required = false) String tags) throws IOException {
         Map<String, Object> map = new HashMap<String, Object>();
-        if(cid != null) {
-            map.put("cid", cid);
-        }
-
-        if(description != null) {
-            map.put("description", description);
-        }
-
         if(multipartFile != null) {
             map.put("content", multipartFile.getBytes());
             String name = multipartFile.getOriginalFilename();
@@ -96,11 +95,48 @@ public class AritcleController {
             }
         }
 
+        if(cid != null) {
+            map.put("cid", cid);
+        }
+
+        if(description != null) {
+            map.put("description", description);
+        }
+
+        if(tags != null) {
+            map.put("tags", tags);
+        }
+
         return articleService.updateArticle(id, map);
     }
 
     @PostMapping("/api/v1/articles")
-    public int insertArticle(@RequestBody Map<String, Object> map) {
+    public int insertArticle(@RequestParam(value = "file") MultipartFile multipartFile,
+            @RequestParam(value = "cid") Integer cid,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "tags", required = false) String tags) throws IOException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(multipartFile != null) {
+            map.put("content", multipartFile.getBytes());
+            String name = multipartFile.getOriginalFilename();
+            if(name != null) {
+                name = name.substring(0, name.lastIndexOf("."));
+                map.put("name", name);
+            }
+        }
+     
+        if(cid != null) {
+            map.put("cid", cid);
+        }
+     
+        if(description != null) {
+            map.put("description", description);
+        }
+     
+        if(tags != null) {
+            map.put("tags", tags);
+        }
+     
         return articleService.insertArticle(map);
     }
 
@@ -108,4 +144,17 @@ public class AritcleController {
     public Boolean deleteArticle(@PathVariable("id") Integer id) {
         return articleService.deleteArticle(id);
     }
+
+    @DeleteMapping("/api/v1/articles")
+    public Boolean deleteArticles(
+            @RequestParam(required = false) Integer category_id,
+            @RequestParam(required = false) Integer tag_id,
+            @RequestParam(required = false) String article_name) {
+        if(article_name != null) {
+            return articleService.deleteArticleByName(article_name);
+        }
+
+        return true;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.devil.blog.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +10,9 @@ import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.devil.blog.entity.Category;
 import com.devil.blog.mapper.CategoryMapper;
 
@@ -20,8 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategory(int id) {
-        Category category = categoryMapper.getCategory(id);
-        return category;
+        return categoryMapper.getCategory(id);
     }
 
     @Override
@@ -43,41 +45,72 @@ public class CategoryServiceImpl implements CategoryService {
             hmp.get(pid).getChildren().add(hmp.get(cid));
         }
         return root;
-
     }
 
-    @Override
-    public boolean updateCategoryRecursively(int id, Map<String, Object> map) {
-        return categoryMapper.updateCategory(id, map);
-    }
+    //@Override
+    //public boolean updateCategoryRecursively(int id, Map<String, Object> map) {
+    //    return categoryMapper.updateCategory(id, map);
+    //}
 
     @Override
+    @Transactional
     public int insertCategoryRecursively(Map<String, Object> params) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("params", params);
-        categoryMapper.insertCategory(map);
-        String sid = map.get("id").toString();
-        return Integer.parseInt(sid);
+        int res = 0;
+        //map to object
+        Category root = JSONObject.parseObject(JSONObject.toJSONString(params), Category.class);
+        //add from top to bottom
+        List<Category> descendants = getDescendants(root);
+        for (Category category : descendants) {
+            category.setChildren(new ArrayList<>());
+            //object to map
+            Map<String, Object> data = JSONObject.parseObject(JSONObject.toJSONString(category));
+            data.remove("children");
+            Map<String, Object> map = new HashMap<>();
+            map.put("params", data);
+
+            res = categoryMapper.insertCategory(map);
+            if(res != 1) {
+                break;
+            }
+        }
+        return res;
     }
 
     @Override
-    public boolean deleteCategoryRecursively(int id) {
+    public boolean deleteCategory(int id) {
         return categoryMapper.deleteCategory(id);
     }
 
     @Override
-    public List<Integer> getDescendants(int id) {
+    @Transactional
+    public boolean deleteCategoryRecursively(int id) {
+        //delete from bottom to top
         Category root = getCategoryRecurively(id);
+        List<Category> descendants = getDescendants(root);
+        Collections.reverse(descendants);
+        for (Category category : descendants) {
+            if(categoryMapper.deleteCategory(category.getId()) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public List<Category> getDescendants(Category root) {
+        List<Category> descendants = new ArrayList<>();
         Queue<Category> que = new LinkedList<>();
         que.add(root);
-        List<Integer> descendants = new ArrayList<>();
         while(!que.isEmpty()) {
             Category u = que.peek();
-            descendants.add(u.getId());
+            descendants.add(u);
+            que.poll();
+            if(u.getChildren() == null) {
+                continue;
+            }
             for(Category v : u.getChildren()) {
                 que.add(v);
             }
-            que.poll();
         }
 
         return descendants;

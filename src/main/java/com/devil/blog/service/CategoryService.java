@@ -9,9 +9,12 @@ public interface CategoryService {
     public Category getCategory(int id);
     public Category getCategoryRecurively(int id);
 
-    public boolean updateCategoryRecursively(int id, Map<String, Object> map);
+    //public boolean updateCategoryRecursively(int id, Map<String, Object> map);
+
     public int insertCategoryRecursively(Map<String, Object> params);
+
+    public boolean deleteCategory(int id);
     public boolean deleteCategoryRecursively(int id);
 
-    public List<Integer> getDescendants(int id);
+    public List<Category> getDescendants(Category root);
 }
