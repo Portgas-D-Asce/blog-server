@@ -144,17 +144,4 @@ public class AritcleController {
     public Boolean deleteArticle(@PathVariable("id") Integer id) {
         return articleService.deleteArticle(id);
     }
-
-    @DeleteMapping("/api/v1/articles")
-    public Boolean deleteArticles(
-            @RequestParam(required = false) Integer category_id,
-            @RequestParam(required = false) Integer tag_id,
-            @RequestParam(required = false) String article_name) {
-        if(article_name != null) {
-            return articleService.deleteArticleByName(article_name);
-        }
-
-        return true;
-    }
-
 }

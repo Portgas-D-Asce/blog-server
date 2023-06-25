@@ -19,5 +19,4 @@ public interface ArticleService {
     public int insertArticle(Map<String, Object> params);
 
     public boolean deleteArticle(int id);
-    public boolean deleteArticleByName(String name);
 }

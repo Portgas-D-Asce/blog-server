@@ -94,18 +94,6 @@ public class ArticleServiceImpl implements ArticleService {
         return res;
     }
 
-    @Override
-    @Transactional
-    public boolean deleteArticleByName(String name) {
-        Article article = getArticleByName(name);
-        int id = article.getId();
-
-        articleMapper.unbindTags(id);
-
-        boolean res = articleMapper.deleteArticle(id);
-        return res;
-    }
-
     private List<Article> fillArticles(List<Article> articles, Boolean with_content) {
         for(Article article : articles) {
             if(with_content == false) {
