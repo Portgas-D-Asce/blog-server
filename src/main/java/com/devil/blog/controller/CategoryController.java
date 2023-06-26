@@ -3,6 +3,8 @@ package com.devil.blog.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +25,14 @@ public class CategoryController {
     private CategoryService categoryService = new CategoryServiceImpl();
 
     @GetMapping("/api/v1/categories/{id}")
-    public Category getCategory(@PathVariable("id") Integer id, @RequestParam(required = false) String recursion) {
+    public ResponseEntity<Object> getCategory(@PathVariable("id") Integer id, @RequestParam(required = false) String recursion) {
+        Category category = new Category();
         if(recursion != null && recursion.equals("true")) {
-            return categoryService.getCategoryRecurively(id);
+            category = categoryService.getCategoryRecurively(id);
+        } else {
+            category = categoryService.getCategory(id);
         }
-        return categoryService.getCategory(id);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     //@PutMapping("/api/v1/categories/{id}")
@@ -36,15 +41,19 @@ public class CategoryController {
     //}
 
     @PostMapping("/api/v1/categories")
-    public int insertCategory(@RequestBody Map<String, Object> map) {
-        return categoryService.insertCategoryRecursively(map);
+    public ResponseEntity<Object> insertCategory(@RequestBody Map<String, Object> map) {
+        Integer id = categoryService.insertCategoryRecursively(map);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/categories/{id}")
-    public boolean deleteCategory(@PathVariable("id") Integer id, @RequestParam(required = false) String recursion) {
+    public ResponseEntity<Object> deleteCategory(@PathVariable("id") Integer id, @RequestParam(required = false) String recursion) {
+        Boolean res = false;
         if(recursion != null && recursion.equals("true")) {
-            return categoryService.deleteCategoryRecursively(id);
+            res = categoryService.deleteCategoryRecursively(id);
+        } else {
+            res = categoryService.deleteCategory(id);
         }
-        return categoryService.deleteCategory(id);
+        return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
     }
 }
