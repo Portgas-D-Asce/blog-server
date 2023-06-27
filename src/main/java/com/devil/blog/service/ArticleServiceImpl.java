@@ -25,19 +25,13 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article getArticle(int id) {
         Article article = articleMapper.getArticle(id);
-        List<Article> articles = new ArrayList<>();
-        articles.add(article);
-        articles = fillArticles(articles, true);
-        return articles.get(0);
+        return fillArticle(article, true);
     }
 
     @Override
     public Article getArticleByName(String name) {
         Article article = articleMapper.getArticleByName(name);
-        List<Article> articles = new ArrayList<>();
-        articles.add(article);
-        articles = fillArticles(articles, true);
-        return articles.get(0);
+        return fillArticle(article, true);
     }
 
     @Override
@@ -100,13 +94,18 @@ public class ArticleServiceImpl implements ArticleService {
         return res;
     }
 
+    private Article fillArticle(Article article, Boolean with_content) {
+        if(with_content == false) {
+            article.setContent(null);
+        }
+        List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
+        article.setTags(tags);
+        return article;
+    }
+
     private List<Article> fillArticles(List<Article> articles, Boolean with_content) {
-        for(Article article : articles) {
-            if(with_content == false) {
-                article.setContent(null);
-            }
-            List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
-            article.setTags(tags);
+        for (Article article : articles) {
+            fillArticle(article, with_content);
         }
         return articles;
     }
