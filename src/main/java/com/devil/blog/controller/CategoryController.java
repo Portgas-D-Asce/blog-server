@@ -42,8 +42,8 @@ public class CategoryController {
 
     @PostMapping("/api/v1/categories")
     public ResponseEntity<Object> insertCategory(@RequestBody Map<String, Object> map) {
-        Integer id = categoryService.insertCategoryRecursively(map);
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        Category category = categoryService.insertCategoryRecursively(map);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/categories/{id}")

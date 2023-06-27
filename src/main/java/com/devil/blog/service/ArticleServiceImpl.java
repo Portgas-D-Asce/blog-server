@@ -24,7 +24,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article getArticle(int id) {
-        return articleMapper.getArticle(id);
+        Article article = articleMapper.getArticle(id);
+        List<Article> articles = new ArrayList<>();
+        articles.add(article);
+        articles = fillArticles(articles, true);
+        return articles.get(0);
     }
 
     @Override
@@ -56,19 +60,21 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public boolean updateArticle(int id, Map<String, Object> map) {
+    public Article updateArticle(int id, Map<String, Object> map) {
         if(map.containsKey("tags")) {
             String tags = String.valueOf(map.get("tags"));
             map.remove("tags");
 
             bindTags(id, tags);
         }
-        return articleMapper.updateArticle(id, map);
+        articleMapper.updateArticle(id, map);
+        return getArticle(id);
+
     }
 
     @Override
     @Transactional
-    public int insertArticle(Map<String, Object> params) {
+    public Article insertArticle(Map<String, Object> params) {
         String tags = null;
         if(params.containsKey("tags")) {
             tags = String.valueOf(params.get("tags"));
@@ -82,7 +88,7 @@ public class ArticleServiceImpl implements ArticleService {
         if(tags != null) {
             bindTags(id, tags);
         }
-        return id;
+        return getArticle(id);
     }
 
     @Override

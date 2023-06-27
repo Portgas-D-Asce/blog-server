@@ -11,7 +11,7 @@ public interface CategoryService {
 
     //public boolean updateCategoryRecursively(int id, Map<String, Object> map);
 
-    public int insertCategoryRecursively(Map<String, Object> params);
+    public Category insertCategoryRecursively(Map<String, Object> params);
 
     public boolean deleteCategory(int id);
     public boolean deleteCategoryRecursively(int id);

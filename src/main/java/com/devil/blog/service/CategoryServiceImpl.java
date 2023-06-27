@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public int insertCategoryRecursively(Map<String, Object> params) {
+    public Category insertCategoryRecursively(Map<String, Object> params) {
         int res = 0;
         //map to object
         Category root = JSONObject.parseObject(JSONObject.toJSONString(params), Category.class);
@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
                 break;
             }
         }
-        return res;
+        return getCategoryRecurively(root.getId());
     }
 
     @Override

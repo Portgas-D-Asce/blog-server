@@ -14,9 +14,9 @@ public interface ArticleService {
     public List<Article> getArticlesByCategoryId(int id, Boolean with_content);
     public List<Article> getArticlesByTagId(int id, Boolean with_content);
 
-    public boolean updateArticle(int id, Map<String, Object> map);
+    public Article updateArticle(int id, Map<String, Object> map);
 
-    public int insertArticle(Map<String, Object> params);
+    public Article insertArticle(Map<String, Object> params);
 
     public boolean deleteArticle(int id);
 }

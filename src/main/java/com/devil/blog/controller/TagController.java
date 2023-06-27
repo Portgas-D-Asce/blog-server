@@ -46,8 +46,8 @@ public class TagController {
 
     @PutMapping("/api/v1/tags/{id}")
     public ResponseEntity<Object> updateTag(@PathVariable("id") Integer id, @RequestBody Map<String, Object> map) {
-        Boolean res = tagService.updateTag(id, map);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        Tag tag = tagService.updateTag(id, map);
+        return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     @PostMapping("/api/v1/tags")
@@ -59,8 +59,8 @@ public class TagController {
         //    ArrayList.class, Integer.class);
         //List<Integer> aids = objectMapper.readValue(objectMapper.writeValueAsString(obj_aids), listType);
         //return tagService.insertTag(tag, aids);
-        Integer id = tagService.insertTag(map);
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        Tag tag = tagService.insertTag(map);
+        return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/tags/{id}")

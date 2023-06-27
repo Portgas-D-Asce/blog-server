@@ -33,16 +33,18 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public boolean updateTag(int id, Map<String, Object> map) {
-        return tagMapper.updateTag(id, map);
+    public Tag updateTag(int id, Map<String, Object> map) {
+        tagMapper.updateTag(id, map);
+        return getTag(id);
     }
 
     @Override
     @Transactional
-    public int insertTag(Map<String, Object> params) {
+    public Tag insertTag(Map<String, Object> params) {
         Map<String, Object> map = new HashMap<>();
         map.put("params", params);
-        return tagMapper.insertTag(map);
+        int id = tagMapper.insertTag(map);
+        return getTag(id);
     }
 
     @Override

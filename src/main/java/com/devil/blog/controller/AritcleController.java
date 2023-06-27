@@ -113,8 +113,8 @@ public class AritcleController {
             map.put("tags", tags);
         }
 
-        Boolean res = articleService.updateArticle(id, map);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        Article article = articleService.updateArticle(id, map);
+        return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
     @PostMapping("/api/v1/articles")
@@ -144,8 +144,8 @@ public class AritcleController {
             map.put("tags", tags);
         }
      
-        Integer id = articleService.insertArticle(map);
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        Article article = articleService.insertArticle(map);
+        return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/articles/{id}")
