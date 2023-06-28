@@ -14,8 +14,8 @@ public interface TagService {
 
     public Tag insertTag(Map<String, Object> params);
 
-    public boolean deleteTag(int id);
-    public boolean deleteTagForcely(int id);
+    public int deleteTag(int id);
+    public int deleteTagForcely(int id);
 
     public List<Map<String, Object>> getTagsStatistics();
 }

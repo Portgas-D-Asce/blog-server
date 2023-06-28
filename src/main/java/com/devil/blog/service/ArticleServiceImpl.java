@@ -87,10 +87,10 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public boolean deleteArticle(int id) {
+    public int deleteArticle(int id) {
         articleMapper.unbindTags(id);
 
-        boolean res = articleMapper.deleteArticle(id);
+        int res = articleMapper.deleteArticle(id);
         return res;
     }
 

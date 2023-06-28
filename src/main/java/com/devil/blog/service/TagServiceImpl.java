@@ -48,13 +48,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public boolean deleteTag(int id) {
+    public int deleteTag(int id) {
         return tagMapper.deleteTag(id);
     }
 
     @Override
     @Transactional
-    public boolean deleteTagForcely(int id) {
+    public int deleteTagForcely(int id) {
         tagMapper.unbindArticles(id);
         return tagMapper.deleteTag(id);
     }

@@ -16,5 +16,5 @@ public interface CategoryMapper {
 
     public boolean updateCategory(int id, Map<String, Object> map);
     public int insertCategory(Map<String, Object> params);
-    public boolean deleteCategory(int id);
+    public int deleteCategory(int id);
 }

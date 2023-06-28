@@ -150,7 +150,7 @@ public class AritcleController {
 
     @DeleteMapping("/api/v1/articles/{id}")
     public ResponseEntity<Object> deleteArticle(@PathVariable("id") Integer id) {
-        Boolean res = articleService.deleteArticle(id);
-        return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
+        articleService.deleteArticle(id);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

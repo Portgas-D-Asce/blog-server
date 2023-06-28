@@ -48,12 +48,11 @@ public class CategoryController {
 
     @DeleteMapping("/api/v1/categories/{id}")
     public ResponseEntity<Object> deleteCategory(@PathVariable("id") Integer id, @RequestParam(required = false) String recursion) {
-        Boolean res = false;
         if(recursion != null && recursion.equals("true")) {
-            res = categoryService.deleteCategoryRecursively(id);
+            categoryService.deleteCategoryRecursively(id);
         } else {
-            res = categoryService.deleteCategory(id);
+            categoryService.deleteCategory(id);
         }
-        return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

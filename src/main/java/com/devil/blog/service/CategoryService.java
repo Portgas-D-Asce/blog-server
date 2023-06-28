@@ -13,8 +13,8 @@ public interface CategoryService {
 
     public Category insertCategoryRecursively(Map<String, Object> params);
 
-    public boolean deleteCategory(int id);
-    public boolean deleteCategoryRecursively(int id);
+    public int deleteCategory(int id);
+    public int deleteCategoryRecursively(int id);
 
     public List<Category> getDescendants(Category root);
 }

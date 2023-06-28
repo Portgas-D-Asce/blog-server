@@ -20,7 +20,7 @@ public interface ArticleMapper {
     
     public boolean updateArticle(int id, Map<String, Object> map);
     public int insertArticle(Map<String, Object> map);
-    public boolean deleteArticle(int id);
+    public int deleteArticle(int id);
 
     public int bindTags(int aid, List<Integer> tids);
     public int unbindTags(int aid);

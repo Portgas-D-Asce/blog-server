@@ -77,23 +77,25 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean deleteCategory(int id) {
+    public int deleteCategory(int id) {
         return categoryMapper.deleteCategory(id);
     }
 
     @Override
     @Transactional
-    public boolean deleteCategoryRecursively(int id) {
+    public int deleteCategoryRecursively(int id) {
+        int cnt = 0;
         //delete from bottom to top
         Category root = getCategoryRecurively(id);
         List<Category> descendants = getDescendants(root);
         Collections.reverse(descendants);
         for (Category category : descendants) {
-            if(categoryMapper.deleteCategory(category.getId()) == false) {
-                return false;
+            if(categoryMapper.deleteCategory(category.getId()) == 0) {
+                return 0;
             }
+            cnt++;
         }
-        return true;
+        return cnt;
     }
 
     @Override

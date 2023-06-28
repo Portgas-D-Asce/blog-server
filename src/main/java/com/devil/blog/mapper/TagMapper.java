@@ -17,7 +17,7 @@ public interface TagMapper {
 
     public boolean updateTag(int id, Map<String, Object> map);
     public int insertTag(Map<String, Object> map);
-    public boolean deleteTag(int id);
+    public int deleteTag(int id);
 
     public List<Map<String, Object>> getTagsStatistics();
 

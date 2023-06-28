@@ -65,13 +65,13 @@ public class TagController {
 
     @DeleteMapping("/api/v1/tags/{id}")
     public ResponseEntity<Object> deleteTag(@PathVariable("id") Integer id, @RequestParam(required = false) String force) {
-        Boolean res = false;
         if(force != null && force.equals("true")) {
-            res = tagService.deleteTagForcely(id);
+            tagService.deleteTagForcely(id);
         } else {
-            res = tagService.deleteTag(id);
+            tagService.deleteTag(id);
         }
-        return new ResponseEntity<>(res, HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/api/v1/tags/statistics")
