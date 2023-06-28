@@ -1,5 +1,8 @@
 package com.devil.blog.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,20 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public int insertImage(Image image) {
-        imageMapper.insertImage(image);
-        return image.getId();
+    public Image insertImage(Map<String, Object> params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("params", params);
+
+        imageMapper.insertImage(map);
+        int id = Integer.parseInt(map.get("id").toString());
+
+        Image image = imageMapper.getImage(id);
+        
+        return image;
     }
 
     @Override
-    public boolean deleteImage(int id) {
+    public int deleteImage(int id) {
         return imageMapper.deleteImage(id);
     }
 }

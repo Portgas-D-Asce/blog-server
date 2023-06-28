@@ -5,12 +5,10 @@ import java.util.Arrays;
 public class Image {
     private int id;
     private String name;
-    private String type;
     private byte[] content;
-    public Image(int id, String name, String type, byte[] content) {
+    public Image(int id, String name, byte[] content) {
         this.id = id;
         this.name = name;
-        this.type = type;
         this.content = content;
     }
     public int getId() {
@@ -25,12 +23,6 @@ public class Image {
     public void setName(String name) {
         this.name = name;
     }
-    public String getType() {
-        return type;
-    }
-    public void setType(String type) {
-        this.type = type;
-    }
     public byte[] getContent() {
         return content;
     }
@@ -39,6 +31,6 @@ public class Image {
     }
     @Override
     public String toString() {
-        return "Image [id=" + id + ", name=" + name + ", type=" + type + ", content=" + Arrays.toString(content) + "]";
-    } 
+        return "Image [id=" + id + ", name=" + name + ", content=" + Arrays.toString(content) + "]";
+    }
 }

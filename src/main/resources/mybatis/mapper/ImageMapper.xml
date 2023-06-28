@@ -11,7 +11,14 @@
         delete from image where id = #{id}
     </delete>
 
-    <insert id="insertImage" parameterType="Image" useGeneratedKeys="true" keyProperty="id">
-        insert into image(id, name, type, content) values(0, #{name}, #{type}, #{content}) 
+    <insert id="insertImage" parameterType="Map" useGeneratedKeys="true" keyProperty="id">
+        insert into image 
+        <foreach collection="params" separator=", " item="val" index="key" open="(" close=")">
+            ${key}
+        </foreach>
+        values
+        <foreach collection="params" separator=", " item="val" index="key" open="(" close=")">
+            #{val}
+        </foreach>
     </insert>
 </mapper>

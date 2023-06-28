@@ -1,9 +1,13 @@
 package com.devil.blog.service;
 
+import java.util.Map;
+
 import com.devil.blog.entity.Image;
 
 public interface ImageService {
     public Image getImage(int id);
-    public int insertImage(Image image);
-    public boolean deleteImage(int id);
+
+    public Image insertImage(Map<String, Object> params);
+
+    public int deleteImage(int id);
 }

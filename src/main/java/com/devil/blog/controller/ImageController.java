@@ -1,10 +1,14 @@
 package com.devil.blog.controller;
 
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,27 +29,31 @@ public class ImageController {
     private ImageService imageService = new ImageServiceImpl();
 
     @GetMapping("/api/v1/images/{id}")
-    public void getContent(@PathVariable("id") Integer id, HttpServletResponse response) throws IOException {
+    public ResponseEntity<Object> getContent(@PathVariable("id") Integer id) throws IOException {
         Image image = imageService.getImage(id);
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType(image.getType());
-        response.getOutputStream().write(image.getContent());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.IMAGE_JPEG);
+
+        return new ResponseEntity<Object>(image.getContent(), httpHeaders, HttpStatus.OK);
     }
 
     @PostMapping("/api/v1/images")
-    public int insertImage(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
-        String name = multipartFile.getOriginalFilename();
-        if(name != null) {
-            name = name.substring(0, name.lastIndexOf("."));
+    public ResponseEntity<Object> insertImage(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(multipartFile != null) {
+            map.put("content", multipartFile.getBytes());
+            String name = multipartFile.getOriginalFilename();
+            if(name != null) {
+                map.put("name", name);
+            }
         }
-        String type = multipartFile.getContentType();
-        byte[] bytes = multipartFile.getBytes();
-        Image image = new Image(0, name, type, bytes);
-        return imageService.insertImage(image);
+        Image image = imageService.insertImage(map);
+        return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/images/{id}")
-    public boolean deleteImage(@PathVariable("id") Integer id) {
-        return imageService.deleteImage(id);
+    public ResponseEntity<Object> deleteImage(@PathVariable("id") Integer id) {
+        imageService.deleteImage(id);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }
