@@ -7,8 +7,22 @@
         select * from image where id = #{id}
     </select>
 
+    <select id="getImageByName" resultType="Image">
+        select * from image where name = #{name}
+    </select>
+
+    <!--
+    <select id="getAllImages" resultType="Image">
+        select * from image
+    </select>
+
     <delete id="deleteImage">
         delete from image where id = #{id}
+    </delete>
+    -->
+
+    <delete id="deleteImagesByArticleId">
+        delete from image where name like concat(#{id}, '%')
     </delete>
 
     <insert id="insertImage" parameterType="Map" useGeneratedKeys="true" keyProperty="id">

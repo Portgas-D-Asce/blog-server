@@ -87,18 +87,32 @@ public class AritcleController {
 
     @PutMapping("/api/v1/articles/{id}")
     public ResponseEntity<Object> updateArticle(
-            @PathVariable("id") Integer id, @RequestParam(value = "file", required = false) MultipartFile multipartFile,
+            @PathVariable("id") Integer id, @RequestParam(value = "article", required = false) MultipartFile article,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
             @RequestParam(value = "cid", required = false) Integer cid,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "tags", required = false) String tags) throws IOException {
+            @RequestParam(value = "tags", required = false) String tags,
+            @RequestParam(value = "description", required = false) String description) throws IOException {
         Map<String, Object> map = new HashMap<String, Object>();
-        if(multipartFile != null) {
-            map.put("content", multipartFile.getBytes());
-            String name = multipartFile.getOriginalFilename();
+
+        if(article != null) {
+            map.put("content", article.getBytes());
+            String name = article.getOriginalFilename();
             if(name != null) {
                 name = name.substring(0, name.lastIndexOf("."));
                 map.put("name", name);
             }
+        }
+
+        if(images != null) {
+            List<Map<String, Object>> items = new ArrayList<>();
+            for (MultipartFile image : images) {
+                Map<String, Object> item = new HashMap<>();
+                String name = image.getOriginalFilename();
+                item.put("name", name);
+                item.put("content", image.getBytes());
+                items.add(item);
+            }
+            map.put("images", items);
         }
 
         if(cid != null) {
@@ -113,39 +127,61 @@ public class AritcleController {
             map.put("tags", tags);
         }
 
-        Article article = articleService.updateArticle(id, map);
-        return new ResponseEntity<>(article, HttpStatus.OK);
+        Article res = articleService.updateArticle(id, map);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping("/api/v1/articles")
-    public ResponseEntity<Object> insertArticle(@RequestParam(value = "file") MultipartFile multipartFile,
+    public ResponseEntity<Object> insertArticle(@RequestParam(value = "article") MultipartFile article,
+            @RequestParam(value = "images") List<MultipartFile> images,
             @RequestParam(value = "cid") Integer cid,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "tags", required = false) String tags) throws IOException {
+            @RequestParam(value = "tags") String tags,
+            @RequestParam(value = "description", required = false) String description) throws IOException {
         Map<String, Object> map = new HashMap<String, Object>();
-        if(multipartFile != null) {
-            map.put("content", multipartFile.getBytes());
-            String name = multipartFile.getOriginalFilename();
-            if(name != null) {
-                name = name.substring(0, name.lastIndexOf("."));
-                map.put("name", name);
-            }
+
+        if(article == null) {
+            Error error = new Error(404, "article is required.", "article is needed when insert article.");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-     
-        if(cid != null) {
-            map.put("cid", cid);
+        map.put("content", article.getBytes());
+        String name = article.getOriginalFilename();
+        if(name != null) {
+            name = name.substring(0, name.lastIndexOf("."));
+            map.put("name", name);
         }
+        
+        if(images == null) {
+            Error error = new Error(404, "images is required.", "article abstract need an image as background.");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+        List<Map<String, Object>> items = new ArrayList<>();
+        for (MultipartFile image : images) {
+            Map<String, Object> item = new HashMap<>();
+            String image_name = image.getOriginalFilename();
+            item.put("name", image_name);
+            item.put("content", image.getBytes());
+            items.add(item);
+        }
+        map.put("images", items);
+
+        if(cid == null) {
+            Error error = new Error(404, "cid is required.", "article must belong to a category.");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+        map.put("cid", cid);
+
+        if(tags == null) {
+            Error error = new Error(404, "tags is required.", "article at least belong to one tag.");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+        map.put("tags", tags);
      
         if(description != null) {
             map.put("description", description);
         }
-     
-        if(tags != null) {
-            map.put("tags", tags);
-        }
-     
-        Article article = articleService.insertArticle(map);
-        return new ResponseEntity<>(article, HttpStatus.OK);
+
+        Article res = articleService.insertArticle(map);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/articles/{id}")
