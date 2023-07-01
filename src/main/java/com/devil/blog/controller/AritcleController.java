@@ -60,7 +60,6 @@ public class AritcleController {
 
         //currently, nobody need us to do this
         if(category_id != null && tag_id != null) {
-            System.out.println("not support by category_id and tag_id together");
             Error error = new Error(800, "category_id and tag_id conflict!", "you can only choose one of them.");
             return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
