@@ -75,7 +75,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         String old_content = new String((byte[])map.get("content"), StandardCharsets.UTF_8);
-        String prefix = "https://localhost:8080/blog/api/v1/images?name=" + id.toString() + "-";
+        String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
         String content = old_content.replaceAll("images/", prefix);
         map.put("content", content.getBytes());
 
@@ -105,7 +105,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         // update article images
         String old_content = new String((byte[])params.get("content"), StandardCharsets.UTF_8);
-        String prefix = "https://localhost:8080/blog/api/v1/images?name=" + id.toString() + "-";
+        String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
         String content = old_content.replaceAll("images/", prefix);
         Map<String, Object> temp = new HashMap<>();
         temp.put("content", content.getBytes());
