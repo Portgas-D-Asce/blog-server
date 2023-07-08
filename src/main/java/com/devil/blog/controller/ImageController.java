@@ -1,5 +1,7 @@
 package com.devil.blog.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 //import java.util.HashMap;
 //import java.util.List;
@@ -24,6 +26,8 @@ import com.devil.blog.entity.Image;
 import com.devil.blog.service.ImageService;
 import com.devil.blog.service.ImageServiceImpl;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 @CrossOrigin
 @RestController
 public class ImageController {
@@ -40,15 +44,26 @@ public class ImageController {
     //}
 
     @GetMapping("/api/v1/images")
-    public ResponseEntity<Object> getContent(@RequestParam(required = false) String name) throws IOException {
+    public ResponseEntity<Object> getContent(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer ratio) throws IOException {
         if(name == null) {
             Error error = new Error(404, "name is required.", 
                 "only support query by name currently, until someone need more.");
             return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
         }
+
         Image image = imageService.getImageByName(name);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
+
+        if(ratio != null && ratio >= 2) {
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(image.getContent());
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            Thumbnails.of(byteArrayInputStream).scale(1.0 / ratio).toOutputStream(byteArrayOutputStream);
+            image.setContent(byteArrayOutputStream.toByteArray());
+        }
 
         return new ResponseEntity<Object>(image.getContent(), httpHeaders, HttpStatus.OK);
     }
