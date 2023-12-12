@@ -39,47 +39,45 @@ public class AritcleController {
 
     @GetMapping("/api/v1/articles/{id}")
     public ResponseEntity<Object> getArticle(@PathVariable("id") Integer id) {
-        Article article = articleService.getArticle(id);
+        Article article = articleService.getArticle(id, true);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/articles")
-    public ResponseEntity<Object> getArticles(@RequestParam(required = false) Integer categoryId,
-                                              @RequestParam(required = false) Integer tagId,
-                                              @RequestParam(required = false) String articleName,
-                                              @RequestParam(required = false) String withContent) {
-        //valueOf include null --> false
-        Boolean flagContent = Boolean.valueOf(withContent);
+    public ResponseEntity<Object> getArticles(@RequestParam(required = false) Integer category_id,
+                                              @RequestParam(required = false) Integer tag_id,
+                                              @RequestParam(required = false) String article_name,
+                                              @RequestParam(required = false, defaultValue = "false") Boolean with_content) {
 
-        if(articleName != null) {
-            Article article = articleService.getArticleByName(articleName);
+        if(article_name != null) {
+            Article article = articleService.getArticleByName(article_name, true);
             return new ResponseEntity<>(article, HttpStatus.OK);
         }
 
         //currently, nobody has this require
-        if(categoryId != null && tagId != null) {
+        if(category_id != null && tag_id != null) {
             Error error = new Error(800,"categoryId and tagId are conflict!",
                     "you can only choose one of them.");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
-        if(tagId != null) {
-            List<Article> articles = articleService.getArticlesByTagId(tagId, flagContent);
+        if(tag_id != null) {
+            List<Article> articles = articleService.getArticlesByTagId(tag_id, with_content);
             return new ResponseEntity<>(articles, HttpStatus.OK);
         }
 
-        if(categoryId != null) {
+        if(category_id != null) {
             List<Article> articles = new ArrayList<>();
-            Category root = categoryService.getCategoryRecurively(categoryId);
+            Category root = categoryService.getCategoryRecurively(category_id);
             List<Category> descendants = categoryService.getDescendants(root);
             for(Category category : descendants) {
-                List<Article> temp = articleService.getArticlesByCategoryId(category.getId(), flagContent);
+                List<Article> temp = articleService.getArticlesByCategoryId(category.getId(), with_content);
                 articles.addAll(temp);
             }
             return new ResponseEntity<>(articles, HttpStatus.OK);
         }
 
-        List<Article> articles = articleService.getAllArticles(flagContent);
+        List<Article> articles = articleService.getAllArticles(with_content);
         return new ResponseEntity<>(articles, HttpStatus.OK);
    }
 
@@ -175,16 +173,36 @@ public class AritcleController {
 
     @DeleteMapping("/api/v1/articles/{id}")
     public ResponseEntity<Object> deleteArticle(@PathVariable("id") Integer id) {
-        articleService.deleteArticle(id);
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        Integer cnt = articleService.deleteArticle(id);
+        return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }
 
-    /*todo 批量删除，按照模糊条件删除
     @DeleteMapping("/api/v1/articles")
-    public ResponseEntity<Object> deleteArticles(@RequestParam(required = false) Integer categoryId,
-                                              @RequestParam(required = false) Integer tagId,
-                                              @RequestParam(required = false) String articleName,
-                                              @RequestParam(required = false) String withContent) {
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    }*/
+    public ResponseEntity<Object> deleteArticles(@RequestParam(required = false) Integer category_id,
+                                              @RequestParam(required = false) Integer tag_id,
+                                              @RequestParam(required = false) String article_name) {
+        if(article_name != null) {
+            Integer cnt = articleService.deleteArticleByName(article_name);
+            return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
+        }
+
+        if(category_id != null && tag_id != null) {
+            Error error = new Error(800,"categoryId and tagId are conflict!",
+                    "you can only choose one of them.");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        if(category_id != null) {
+            Integer cnt = articleService.deleteArticlesByCategoryId(category_id);
+            return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
+        }
+
+        if(tag_id != null) {
+            Integer cnt = articleService.deleteArticlesByTagId(tag_id);
+            return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
+        }
+
+        Integer cnt = articleService.deleteAllArticles();
+        return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
+    }
 }

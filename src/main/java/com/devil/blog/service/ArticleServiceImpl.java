@@ -28,15 +28,15 @@ public class ArticleServiceImpl implements ArticleService {
     private ImageMapper imageMapper;
 
     @Override
-    public Article getArticle(Integer id) {
+    public Article getArticle(Integer id, Boolean withContent) {
         Article article = articleMapper.getArticle(id);
-        return fillArticle(article, true);
+        return fillArticle(article, withContent);
     }
 
     @Override
-    public Article getArticleByName(String name) {
+    public Article getArticleByName(String name, Boolean withContent) {
         Article article = articleMapper.getArticleByName(name);
-        return fillArticle(article, true);
+        return fillArticle(article, withContent);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ArticleServiceImpl implements ArticleService {
         map.put("content", content.getBytes());
 
         articleMapper.updateArticle(id, map);
-        return getArticle(id);
+        return getArticle(id, true);
 
     }
 
@@ -120,22 +120,60 @@ public class ArticleServiceImpl implements ArticleService {
         if(images != null) {
             addImages(id, images);
         }
-        return getArticle(id);
+        return getArticle(id, true);
     }
 
     @Override
     @Transactional
-    public int deleteArticle(Integer id) {
+    public Integer deleteArticle(Integer id) {
         articleMapper.unbindTags(id);
 
         imageMapper.deleteImagesByArticleId(id + "-");
 
-        int res = articleMapper.deleteArticle(id);
-        return res;
+        return articleMapper.deleteArticle(id);
     }
 
-    private Article fillArticle(Article article, Boolean with_content) {
-        if(!with_content) {
+    @Override
+    @Transactional
+    public Integer deleteArticleByName(String name) {
+        Article article = articleMapper.getArticleByName(name);
+
+        return deleteArticle(article.getId());
+    }
+
+    /*I'm a lazy boy*/
+    @Override
+    @Transactional
+    public Integer deleteAllArticles() {
+        List<Article> articles = articleMapper.getAllArticles();
+        for(Article article : articles) {
+            deleteArticle(article.getId());
+        }
+        return articles.size();
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteArticlesByCategoryId(Integer id) {
+        List<Article> articles = articleMapper.getArticlesByCategoryId(id);
+        for(Article article : articles) {
+            deleteArticle(article.getId());
+        }
+        return articles.size();
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteArticlesByTagId(Integer id) {
+        List<Article> articles = articleMapper.getArticlesByTagId(id);
+        for(Article article : articles) {
+            deleteArticle(article.getId());
+        }
+        return articles.size();
+    }
+
+    private Article fillArticle(Article article, Boolean withContent) {
+        if(!withContent) {
             article.setContent(null);
         }
         List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
