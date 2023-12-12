@@ -1,6 +1,5 @@
 package com.devil.blog.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,38 +33,39 @@ public class TagController {
     }
 
     @GetMapping("/api/v1/tags")
-    public ResponseEntity<Object> getTags(@RequestParam(required = false) Integer article_id) {
-        List<Tag> tags = new ArrayList<>();
-        if(article_id == null) {
+    public ResponseEntity<Object> getTags(@RequestParam(required = false) Integer articleId) {
+        List<Tag> tags;
+        if(articleId == null) {
             tags = tagService.getAllTags();
         } else {
-            tags = tagService.getTagsByArticleId(article_id);
+            tags = tagService.getTagsByArticleId(articleId);
         }
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
     @PutMapping("/api/v1/tags/{id}")
-    public ResponseEntity<Object> updateTag(@PathVariable("id") Integer id, @RequestBody Map<String, Object> map) {
+    public ResponseEntity<Object> updateTag(@PathVariable("id") Integer id,
+                                            @RequestBody Map<String, Object> map) {
         Tag tag = tagService.updateTag(id, map);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
+    /*todo
+    @PutMapping("/api/v1/tags")
+    public ResponseEntity<Object> updateTags(@RequestBody Map<String, Object> map) {
+        return new ResponseEntity<>(tags, HttpStatus.OK);
+    }*/
+
     @PostMapping("/api/v1/tags")
     public ResponseEntity<Object> insertTag(@RequestBody Map<String, Object> map) {
-        //Object obj_aids = map.get("aids");
-
-        //Tag tag = objectMapper.readValue(objectMapper.writeValueAsString(obj_tag), Tag.class);
-        //CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(
-        //    ArrayList.class, Integer.class);
-        //List<Integer> aids = objectMapper.readValue(objectMapper.writeValueAsString(obj_aids), listType);
-        //return tagService.insertTag(tag, aids);
         Tag tag = tagService.insertTag(map);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/tags/{id}")
-    public ResponseEntity<Object> deleteTag(@PathVariable("id") Integer id, @RequestParam(required = false) String force) {
-        if(force != null && force.equals("true")) {
+    public ResponseEntity<Object> deleteTag(@PathVariable("id") Integer id,
+                                            @RequestParam(required = false) Boolean force) {
+        if(force) {
             tagService.deleteTagForcely(id);
         } else {
             tagService.deleteTag(id);
@@ -73,6 +73,18 @@ public class TagController {
 
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
+
+    /*todo 批量删除
+    @DeleteMapping("/api/v1/tags")
+    public ResponseEntity<Object> deleteTags(@RequestParam(required = false) Boolean force) {
+        if(force) {
+
+        } else {
+
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }*/
 
     @GetMapping("/api/v1/tags/statistics")
     public ResponseEntity<Object> getTagsStatistics() {

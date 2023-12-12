@@ -34,25 +34,14 @@ public class ImageController {
     @Autowired
     private ImageService imageService = new ImageServiceImpl();
 
-    //@GetMapping("/api/v1/images/{id}")
-    //public ResponseEntity<Object> getContent(@PathVariable("id") Integer id) throws IOException {
-    //    Image image = imageService.getImage(id);
-    //    HttpHeaders httpHeaders = new HttpHeaders();
-    //    httpHeaders.setContentType(MediaType.IMAGE_JPEG);
-
-    //    return new ResponseEntity<Object>(image.getContent(), httpHeaders, HttpStatus.OK);
-    //}
+    /*
+    * where is post + put + delete ?
+    * 不单独提供这些接口, 统一从 article 起手
+    * */
 
     @GetMapping("/api/v1/images")
-    public ResponseEntity<Object> getContent(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Integer ratio) throws IOException {
-        if(name == null) {
-            Error error = new Error(404, "name is required.", 
-                "only support query by name currently, until someone need more.");
-            return new ResponseEntity<Object>(error, HttpStatus.NOT_FOUND);
-        }
-
+    public ResponseEntity<Object> getContent(@RequestParam String name,
+                                             @RequestParam(required = false) Integer ratio) throws IOException {
         Image image = imageService.getImageByName(name);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
@@ -65,26 +54,6 @@ public class ImageController {
             image.setContent(byteArrayOutputStream.toByteArray());
         }
 
-        return new ResponseEntity<Object>(image.getContent(), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(image.getContent(), httpHeaders, HttpStatus.OK);
     }
-
-    //@PostMapping("/api/v1/images")
-    //public ResponseEntity<Object> insertImage(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
-    //    Map<String, Object> map = new HashMap<String, Object>();
-    //    if(multipartFile != null) {
-    //        map.put("content", multipartFile.getBytes());
-    //        String name = multipartFile.getOriginalFilename();
-    //        if(name != null) {
-    //            map.put("name", name);
-    //        }
-    //    }
-    //    Image image = imageService.insertImage(map);
-    //    return new ResponseEntity<>(image, HttpStatus.OK);
-    //}
-
-    //@DeleteMapping("/api/v1/images/{id}")
-    //public ResponseEntity<Object> deleteImage(@PathVariable("id") Integer id) {
-    //    imageService.deleteImage(id);
-    //    return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    //}
 }

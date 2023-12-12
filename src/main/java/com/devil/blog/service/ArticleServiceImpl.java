@@ -128,14 +128,14 @@ public class ArticleServiceImpl implements ArticleService {
     public int deleteArticle(Integer id) {
         articleMapper.unbindTags(id);
 
-        imageMapper.deleteImagesByArticleId(id.toString() + "-");
+        imageMapper.deleteImagesByArticleId(id + "-");
 
         int res = articleMapper.deleteArticle(id);
         return res;
     }
 
     private Article fillArticle(Article article, Boolean with_content) {
-        if(with_content == false) {
+        if(!with_content) {
             article.setContent(null);
         }
         List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
