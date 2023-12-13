@@ -47,7 +47,10 @@ public class AritcleController {
     public ResponseEntity<Object> getArticles(@RequestParam(required = false) Integer category_id,
                                               @RequestParam(required = false) Integer tag_id,
                                               @RequestParam(required = false) String article_name,
-                                              @RequestParam(required = false, defaultValue = "false") Boolean with_content) {
+                                              @RequestParam(required = false) Boolean with_content) {
+        if(with_content == null) {
+            with_content = false;
+        }
 
         if(article_name != null) {
             Article article = articleService.getArticleByName(article_name, true);

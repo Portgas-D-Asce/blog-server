@@ -6,16 +6,20 @@ import java.util.Map;
 import com.devil.blog.entity.Tag;
 
 public interface TagService {
-    public Tag getTag(int id);
+    public Tag getTag(Integer id);
     public List<Tag> getAllTags();
-    public List<Tag> getTagsByArticleId(int article_id);
+    public List<Tag> getTagsByArticleId(Integer article_id);
 
-    public Tag updateTag(int id, Map<String, Object> map);
+    public Tag updateTag(Integer id, Map<String, Object> map);
+    public List<Tag> updateTags(List<Map<String, Object>> maps);
 
-    public Tag insertTag(Map<String, Object> params);
+    public List<Tag> insertTags(List<Map<String, Object>> maps);
 
-    public int deleteTag(int id);
-    public int deleteTagForcely(int id);
+    public Integer deleteTag(Integer id);
+    public Integer deleteTagForce(Integer id);
+
+    public Integer deleteAllTags();
+    public Integer deleteAllTagsForce();
 
     public List<Map<String, Object>> getTagsStatistics();
 }

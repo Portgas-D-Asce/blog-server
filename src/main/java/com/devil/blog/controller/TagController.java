@@ -32,16 +32,17 @@ public class TagController {
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
-    @GetMapping("/api/v1/tags")
-    public ResponseEntity<Object> getTags(@RequestParam(required = false) Integer articleId) {
-        List<Tag> tags;
-        if(articleId == null) {
-            tags = tagService.getAllTags();
-        } else {
-            tags = tagService.getTagsByArticleId(articleId);
-        }
-        return new ResponseEntity<>(tags, HttpStatus.OK);
-    }
+    //needn't provid this???
+    //@GetMapping("/api/v1/tags")
+    //public ResponseEntity<Object> getTags(@RequestParam(required = false) Integer article_id) {
+    //    List<Tag> tags;
+    //    if(article_id == null) {
+    //        tags = tagService.getAllTags();
+    //    } else {
+    //        tags = tagService.getTagsByArticleId(article_id);
+    //    }
+    //    return new ResponseEntity<>(tags, HttpStatus.OK);
+    //}
 
     @PutMapping("/api/v1/tags/{id}")
     public ResponseEntity<Object> updateTag(@PathVariable("id") Integer id,
@@ -50,41 +51,43 @@ public class TagController {
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
-    /*todo
     @PutMapping("/api/v1/tags")
-    public ResponseEntity<Object> updateTags(@RequestBody Map<String, Object> map) {
+    public ResponseEntity<Object> updateTags(@RequestBody List<Map<String, Object>> maps) {
+        List<Tag> tags = tagService.updateTags(maps);
         return new ResponseEntity<>(tags, HttpStatus.OK);
-    }*/
+    }
 
     @PostMapping("/api/v1/tags")
-    public ResponseEntity<Object> insertTag(@RequestBody Map<String, Object> map) {
-        Tag tag = tagService.insertTag(map);
-        return new ResponseEntity<>(tag, HttpStatus.OK);
+    public ResponseEntity<Object> insertTags(@RequestBody List<Map<String, Object>> maps) {
+        List<Tag> tags = tagService.insertTags(maps);
+        return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/v1/tags/{id}")
     public ResponseEntity<Object> deleteTag(@PathVariable("id") Integer id,
                                             @RequestParam(required = false) Boolean force) {
-        if(force) {
-            tagService.deleteTagForcely(id);
+        Integer cnt;
+        if(force != null && force) {
+            cnt = tagService.deleteTagForce(id);
         } else {
-            tagService.deleteTag(id);
+            cnt = tagService.deleteTag(id);
         }
 
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }
 
-    /*todo 批量删除
     @DeleteMapping("/api/v1/tags")
     public ResponseEntity<Object> deleteTags(@RequestParam(required = false) Boolean force) {
-        if(force) {
+        Integer cnt;
 
+        if(force != null && force) {
+            cnt = tagService.deleteAllTagsForce();
         } else {
-
+            cnt = tagService.deleteAllTags();
         }
 
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    }*/
+        return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
+    }
 
     @GetMapping("/api/v1/tags/statistics")
     public ResponseEntity<Object> getTagsStatistics() {

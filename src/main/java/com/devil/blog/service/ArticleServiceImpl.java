@@ -74,14 +74,17 @@ public class ArticleServiceImpl implements ArticleService {
             addImages(id, images);
         }
 
-        String old_content = new String((byte[])map.get("content"), StandardCharsets.UTF_8);
-        String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
-        String content = old_content.replaceAll("images/", prefix);
-        map.put("content", content.getBytes());
+        if(map.containsKey("content")) {
+            String old_content = new String((byte[])map.get("content"), StandardCharsets.UTF_8);
+            String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
+            String content = old_content.replaceAll("images/", prefix);
+            map.put("content", content.getBytes());
+        }
 
-        articleMapper.updateArticle(id, map);
+        if(!map.isEmpty()) {
+            articleMapper.updateArticle(id, map);
+        }
         return getArticle(id, true);
-
     }
 
     @Override
