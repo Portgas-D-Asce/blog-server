@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import com.devil.blog.entity.Article;
+import com.devil.blog.mapper.ArticleMapper;
+import com.devil.blog.mapper.ImageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,27 +26,27 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategory(int id) {
-        return categoryMapper.getCategory(id);
+        Category category = categoryMapper.getCategory(id);
+        category.setChildren(new ArrayList<>());
+        return category;
     }
 
     @Override
-    public Category getCategoryRecurively(int id) {
-        List<Category> categories = categoryMapper.getAllCategories();
-        Category root = null;
+    public Category getCategoryTree(int id) {
+        Category root = getCategory(id);
+        // had sorted at sql query
+        List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
+
         HashMap<Integer, Category> hmp = new HashMap<>();
-        for(Category category : categories) {
-            category.setChildren(new ArrayList<Category>());
-            hmp.put(category.getId(), category);
-            if(category.getId() == id) {
-                root = category;
-            }
+        hmp.put(id, root);
+        for(Category descendant : descendants) {
+            descendant.setChildren(new ArrayList<>());
+            int cid = descendant.getId();
+            hmp.put(cid, descendant);
+            int pid = descendant.getPid();
+            hmp.get(pid).getChildren().add(descendant);
         }
-        for(Category category : categories) {
-            int cid = category.getId();
-            int pid = category.getPid();
-            if(cid == pid) continue;
-            hmp.get(pid).getChildren().add(hmp.get(cid));
-        }
+
         return root;
     }
 
@@ -54,26 +57,39 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public Category insertCategoryRecursively(Map<String, Object> params) {
-        int res = 0;
-        //map to object
-        Category root = JSONObject.parseObject(JSONObject.toJSONString(params), Category.class);
-        //add from top to bottom
-        List<Category> descendants = getDescendants(root);
-        for (Category category : descendants) {
-            category.setChildren(new ArrayList<>());
-            //object to map
-            Map<String, Object> data = JSONObject.parseObject(JSONObject.toJSONString(category));
-            data.remove("children");
-            Map<String, Object> map = new HashMap<>();
-            map.put("params", data);
+    public Category insertCategoryTree(int pid, Map<String, Object> params) {
+        Category root = getCategory(pid);
+        Category tree = JSONObject.parseObject(JSONObject.toJSONString(params), Category.class);
+        root.getChildren().add(tree);
 
-            res = categoryMapper.insertCategory(map);
-            if(res != 1) {
-                break;
+        Queue<Category> que = new LinkedList<>();
+        que.add(root);
+        while(!que.isEmpty()) {
+            Category cur = que.peek();
+            que.poll();
+
+            List<Category> children = cur.getChildren();
+            if(children == null) continue;
+
+            for(Category child : children) {
+                child.setPid(cur.getId());
+                child.setPath(cur.relPath());
+
+                List<Category> temp = child.getChildren();
+                child.setChildren(null);
+                Map<String, Object> data = JSONObject.parseObject(JSONObject.toJSONString(child));
+                child.setChildren(temp);
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("params", data);
+                categoryMapper.insertCategory(map);
+                int id = Integer.parseInt(map.get("id").toString());
+                child.setId(id);
+
+                que.add(child);
             }
         }
-        return getCategoryRecurively(root.getId());
+        return getCategoryTree(pid);
     }
 
     @Override
@@ -83,38 +99,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public int deleteCategoryRecursively(int id) {
-        int cnt = 0;
-        //delete from bottom to top
-        Category root = getCategoryRecurively(id);
-        List<Category> descendants = getDescendants(root);
+    public int deleteCategoryTree(int id) {
+        Category root = getCategory(id);
+        // had sorted at sql query
+        List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
+        // need delete from child to parent
         Collections.reverse(descendants);
-        for (Category category : descendants) {
-            if(categoryMapper.deleteCategory(category.getId()) == 0) {
-                return 0;
-            }
-            cnt++;
-        }
-        return cnt;
-    }
+        // delete root at last
+        descendants.add(root);
 
-    @Override
-    public List<Category> getDescendants(Category root) {
-        List<Category> descendants = new ArrayList<>();
-        Queue<Category> que = new LinkedList<>();
-        que.add(root);
-        while(!que.isEmpty()) {
-            Category u = que.peek();
-            descendants.add(u);
-            que.poll();
-            if(u.getChildren() == null) {
-                continue;
-            }
-            for(Category v : u.getChildren()) {
-                que.add(v);
-            }
+        for (Category descendant : descendants) {
+            deleteCategory(descendant.getId());
         }
 
-        return descendants;
+        return descendants.size();
     }
 }

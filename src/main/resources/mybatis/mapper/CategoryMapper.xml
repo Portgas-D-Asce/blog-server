@@ -11,6 +11,10 @@
         select * from category 
     </select>
 
+    <select id="getDescendantCategories" resultType="Category">
+        select * from category where path like '${path}%' order by path asc
+    </select>
+
     <update id="updateCategory" parameterType="Map">
         update category set 
         <foreach collection="map" separator=", " item="val" index="key" open=" " close=" ">

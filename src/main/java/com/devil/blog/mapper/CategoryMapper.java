@@ -13,6 +13,7 @@ import com.devil.blog.entity.Category;
 public interface CategoryMapper {
     public Category getCategory(int id);
     public List<Category> getAllCategories();
+    public List<Category> getDescendantCategories(String path);
 
     public boolean updateCategory(int id, Map<String, Object> map);
     public int insertCategory(Map<String, Object> params);

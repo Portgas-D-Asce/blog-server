@@ -7,21 +7,35 @@ import com.devil.blog.entity.Article;
 
 
 public interface ArticleService {
-    public Article getArticle(Integer id, Boolean withContent);
-    public Article getArticleByName(String name, Boolean withContent);
+    Article getArticle(Integer id, Boolean withContent);
 
-    public List<Article> getAllArticles(Boolean withContent);
-    public List<Article> getArticlesByCategoryId(Integer id, Boolean withContent);
-    public List<Article> getArticlesByTagId(Integer id, Boolean withContent);
+    //Article getArticleByName(String name, Boolean withContent);
 
-    public Article updateArticle(Integer id, Map<String, Object> map);
+    List<Article> getAllArticles(Boolean withContent);
 
-    public Article insertArticle(Map<String, Object> params);
+    //get articles of category id (only)
+    List<Article> getArticlesByCategoryId(Integer id, Boolean withContent);
 
-    public Integer deleteArticle(Integer id);
-    public Integer deleteArticleByName(String name);
+    //get articles of category tree rooted with id
+    List<Article> getArticlesByCategoryIdRecursively(int id, boolean withContent);
 
-    public Integer deleteAllArticles();
-    public Integer deleteArticlesByCategoryId(Integer id);
-    public Integer deleteArticlesByTagId(Integer id);
+    List<Article> getArticlesByTagId(Integer id, Boolean withContent);
+
+    Article updateArticle(Integer id, Map<String, Object> map);
+
+    Article insertArticle(Map<String, Object> params);
+
+    Integer deleteArticle(Integer id);
+
+    //public Integer deleteArticleByName(String name);
+
+    Integer deleteAllArticles();
+
+    //delete articles of category id (only)
+    Integer deleteArticlesByCategoryId(Integer id);
+
+    //delete articles of category tree rooted with id
+    int deleteArticlesByCategoryIdRecursively(int id);
+
+    Integer deleteArticlesByTagId(Integer id);
 }

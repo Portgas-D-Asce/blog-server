@@ -7,14 +7,12 @@ import com.devil.blog.entity.Category;
 
 public interface CategoryService {
     public Category getCategory(int id);
-    public Category getCategoryRecurively(int id);
+    public Category getCategoryTree(int id);
 
     //public boolean updateCategoryRecursively(int id, Map<String, Object> map);
 
-    public Category insertCategoryRecursively(Map<String, Object> params);
+    public Category insertCategoryTree(int pid, Map<String, Object> params);
 
     public int deleteCategory(int id);
-    public int deleteCategoryRecursively(int id);
-
-    public List<Category> getDescendants(Category root);
+    public int deleteCategoryTree(int id);
 }

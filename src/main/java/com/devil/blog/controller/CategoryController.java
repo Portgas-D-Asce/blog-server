@@ -24,13 +24,14 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService = new CategoryServiceImpl();
 
-    /*todo recursion 没有必要，可以考虑删除*/
     @GetMapping("/api/v1/categories/{id}")
-    public ResponseEntity<Object> getCategory(@PathVariable("id") Integer id,
-                                              @RequestParam(required = false) Boolean recursion) {
+    public ResponseEntity<Object> getCategory(
+            @PathVariable("id") Integer id,
+            @RequestParam(required = false, defaultValue = "false") Boolean recursively) {
+
         Category category;
-        if(recursion) {
-            category = categoryService.getCategoryRecurively(id);
+        if(recursively) {
+            category = categoryService.getCategoryTree(id);
         } else {
             category = categoryService.getCategory(id);
         }
@@ -44,23 +45,23 @@ public class CategoryController {
     }*/
 
     @PostMapping("/api/v1/categories")
-    public ResponseEntity<Object> insertCategory(@RequestBody Map<String, Object> map) {
-        Category category = categoryService.insertCategoryRecursively(map);
+    public ResponseEntity<Object> insertCategory(
+            @RequestParam(required = false, defaultValue = "8") Integer pid,
+            @RequestBody Map<String, Object> map) {
+        Category category = categoryService.insertCategoryTree(pid, map);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    /*todo
-       recursion 没有必要，可以考虑删除
-       force 有必要，可以考虑添加
-    */
     @DeleteMapping("/api/v1/categories/{id}")
-    public ResponseEntity<Object> deleteCategory(@PathVariable("id") Integer id,
-                                                 @RequestParam(required = false) Boolean recursion) {
-        if(recursion != null && recursion) {
-            categoryService.deleteCategoryRecursively(id);
+    public ResponseEntity<Object> deleteCategory(
+            @PathVariable("id") Integer id,
+            @RequestParam(required = false, defaultValue = "false") Boolean recursively) {
+        int cnt;
+        if(recursively) {
+            cnt = categoryService.deleteCategoryTree(id);
         } else {
-            categoryService.deleteCategory(id);
+            cnt = categoryService.deleteCategory(id);
         }
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }
 }

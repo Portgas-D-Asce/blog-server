@@ -20,12 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.devil.blog.entity.Article;
-import com.devil.blog.entity.Category;
 import com.devil.blog.entity.Error;
 import com.devil.blog.service.ArticleService;
 import com.devil.blog.service.ArticleServiceImpl;
-import com.devil.blog.service.CategoryService;
-import com.devil.blog.service.CategoryServiceImpl;
 
 @CrossOrigin
 @RestController
@@ -33,29 +30,26 @@ public class AritcleController {
     @Autowired
     private ArticleService articleService = new ArticleServiceImpl();
 
-    @Autowired
-    //shouldn't appear here, wait to be removed
-    private CategoryService categoryService = new CategoryServiceImpl();
-
     @GetMapping("/api/v1/articles/{id}")
-    public ResponseEntity<Object> getArticle(@PathVariable("id") Integer id) {
-        Article article = articleService.getArticle(id, true);
+    public ResponseEntity<Object> getArticle(
+            @PathVariable("id") Integer id,
+            @RequestParam(required = false, defaultValue = "false") Boolean with_content) {
+        Article article = articleService.getArticle(id, with_content);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/articles")
-    public ResponseEntity<Object> getArticles(@RequestParam(required = false) Integer category_id,
-                                              @RequestParam(required = false) Integer tag_id,
-                                              @RequestParam(required = false) String article_name,
-                                              @RequestParam(required = false) Boolean with_content) {
-        if(with_content == null) {
-            with_content = false;
-        }
+    public ResponseEntity<Object> getArticles(
+            //@RequestParam(required = false) String article_name,
+            @RequestParam(required = false) Integer category_id,
+            @RequestParam(required = false, defaultValue = "false") Boolean recursively,
+            @RequestParam(required = false) Integer tag_id,
+            @RequestParam(required = false, defaultValue = "false") Boolean with_content) {
 
-        if(article_name != null) {
-            Article article = articleService.getArticleByName(article_name, true);
-            return new ResponseEntity<>(article, HttpStatus.OK);
-        }
+        //if(article_name != null) {
+        //    Article article = articleService.getArticleByName(article_name, with_content);
+        //    return new ResponseEntity<>(article, HttpStatus.OK);
+        //}
 
         //currently, nobody has this require
         if(category_id != null && tag_id != null) {
@@ -64,35 +58,29 @@ public class AritcleController {
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
+        List<Article> articles;
         if(tag_id != null) {
-            List<Article> articles = articleService.getArticlesByTagId(tag_id, with_content);
-            return new ResponseEntity<>(articles, HttpStatus.OK);
-        }
-
-        if(category_id != null) {
-            List<Article> articles = new ArrayList<>();
-            Category root = categoryService.getCategoryRecurively(category_id);
-            List<Category> descendants = categoryService.getDescendants(root);
-            for(Category category : descendants) {
-                List<Article> temp = articleService.getArticlesByCategoryId(category.getId(), with_content);
-                articles.addAll(temp);
+            articles = articleService.getArticlesByTagId(tag_id, with_content);
+        } else if(category_id != null) {
+            if(recursively) {
+                articles = articleService.getArticlesByCategoryIdRecursively(category_id, with_content);
+            } else {
+                articles = articleService.getArticlesByCategoryId(category_id, with_content);
             }
-            return new ResponseEntity<>(articles, HttpStatus.OK);
+        } else {
+            articles = articleService.getAllArticles(with_content);
         }
 
-        List<Article> articles = articleService.getAllArticles(with_content);
         return new ResponseEntity<>(articles, HttpStatus.OK);
    }
 
-   private Map<String, Object> getArticle(MultipartFile article) throws IOException {
-       Map<String, Object> map = new HashMap<>();
+   private void getArticle(Map<String, Object> map, MultipartFile article) throws IOException {
        map.put("content", article.getBytes());
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));
            map.put("name", name);
        }
-       return map;
    }
 
    private List<Map<String, Object>> getImages(List<MultipartFile> images) throws IOException {
@@ -109,7 +97,8 @@ public class AritcleController {
 
     @PutMapping("/api/v1/articles/{id}")
     public ResponseEntity<Object> updateArticle(
-            @PathVariable("id") Integer id, @RequestParam(value = "article", required = false) MultipartFile article,
+            @PathVariable("id") Integer id,
+            @RequestParam(value = "article", required = false) MultipartFile article,
             @RequestParam(value = "images", required = false) List<MultipartFile> images,
             @RequestParam(value = "cid", required = false) Integer cid,
             @RequestParam(value = "tags", required = false) String tags,
@@ -117,9 +106,7 @@ public class AritcleController {
         Map<String, Object> map = new HashMap<>();
 
         if(article != null) {
-            Map<String, Object> temp = getArticle(article);
-            map.put("content", temp.get("content"));
-            map.put("name", temp.get("name"));
+            getArticle(map, article);
         }
 
         if(images != null) {
@@ -139,23 +126,19 @@ public class AritcleController {
         }
 
         Article res = articleService.updateArticle(id, map);
-        if(res == null) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @PostMapping("/api/v1/articles")
-    public ResponseEntity<Object> insertArticle(@RequestParam(value = "article") MultipartFile article,
+    public ResponseEntity<Object> insertArticle(
+            @RequestParam(value = "article") MultipartFile article,
             @RequestParam(value = "images") List<MultipartFile> images,
             @RequestParam(value = "cid") Integer cid,
             @RequestParam(value = "tags") String tags,
             @RequestParam(value = "description", required = false) String description) throws IOException {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
-        Map<String, Object> temp = getArticle(article);
-        map.put("content", temp.get("content"));
-        map.put("name", temp.get("name"));
+        getArticle(map, article);
 
         map.put("images", getImages(images));
 
@@ -168,9 +151,6 @@ public class AritcleController {
         }
 
         Article res = articleService.insertArticle(map);
-        if(res == null) {
-            new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
@@ -181,13 +161,15 @@ public class AritcleController {
     }
 
     @DeleteMapping("/api/v1/articles")
-    public ResponseEntity<Object> deleteArticles(@RequestParam(required = false) Integer category_id,
-                                              @RequestParam(required = false) Integer tag_id,
-                                              @RequestParam(required = false) String article_name) {
-        if(article_name != null) {
-            Integer cnt = articleService.deleteArticleByName(article_name);
-            return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<Object> deleteArticles(
+            //@RequestParam(required = false) String article_name,
+            @RequestParam(required = false) Integer category_id,
+            @RequestParam(required = false, defaultValue = "false") Boolean recursively,
+            @RequestParam(required = false) Integer tag_id) {
+        //if(article_name != null) {
+        //    Integer cnt = articleService.deleteArticleByName(article_name);
+        //    return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
+        //}
 
         if(category_id != null && tag_id != null) {
             Error error = new Error(800,"categoryId and tagId are conflict!",
@@ -195,17 +177,19 @@ public class AritcleController {
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
-        if(category_id != null) {
-            Integer cnt = articleService.deleteArticlesByCategoryId(category_id);
-            return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
-        }
-
+        int cnt;
         if(tag_id != null) {
-            Integer cnt = articleService.deleteArticlesByTagId(tag_id);
-            return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
+            cnt = articleService.deleteArticlesByTagId(tag_id);
+        } else if(category_id != null) {
+            if(recursively) {
+                cnt = articleService.deleteArticlesByCategoryIdRecursively(category_id);
+            } else {
+                cnt = articleService.deleteArticlesByCategoryId(category_id);
+            }
+        } else {
+            cnt = articleService.deleteAllArticles();
         }
 
-        Integer cnt = articleService.deleteAllArticles();
         return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }
 }

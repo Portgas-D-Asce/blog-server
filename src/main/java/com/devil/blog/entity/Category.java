@@ -6,14 +6,17 @@ public class Category {
     private int id;
     private int pid;
     private String name;
+
+    private String path;
     private String description;
     private List<Category> children;
     public Category() {
     }
-    public Category(int id, int pid, String name, String description, List<Category> children) {
+    public Category(int id, int pid, String name, String path, String description, List<Category> children) {
         this.id = id;
         this.pid = pid;
         this.name = name;
+        this.path = path;
         this.description = description;
         this.children = children;
     }
@@ -47,10 +50,26 @@ public class Category {
     public void setChildren(List<Category> children) {
         this.children = children;
     }
+    public String getPath() {
+        return path;
+    }
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String relPath() {
+        return path + id + "-";
+    }
     @Override
     public String toString() {
-        return "Category [id=" + id + ", pid=" + pid + ", name=" + name + ", description=" + description
-                + ", children=" + children + "]";
+        return "Category{" +
+                "id=" + id +
+                ", pid=" + pid +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", description='" + description + '\'' +
+                ", children=" + children +
+                '}';
     }
 }
 

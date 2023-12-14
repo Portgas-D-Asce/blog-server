@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.devil.blog.entity.Category;
+import com.devil.blog.mapper.CategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,34 +29,55 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ImageMapper imageMapper;
 
+    @Autowired
+    private CategoryMapper categoryMapper;
+
     @Override
     public Article getArticle(Integer id, Boolean withContent) {
         Article article = articleMapper.getArticle(id);
-        return fillArticle(article, withContent);
+        fillArticle(article, withContent);
+        return article;
     }
 
-    @Override
-    public Article getArticleByName(String name, Boolean withContent) {
-        Article article = articleMapper.getArticleByName(name);
-        return fillArticle(article, withContent);
-    }
+    //@Override
+    //public Article getArticleByName(String name, Boolean withContent) {
+    //    Article article = articleMapper.getArticleByName(name);
+    //    return fillArticle(article, withContent);
+    //}
 
     @Override
-    public List<Article> getAllArticles(Boolean with_content) {
+    public List<Article> getAllArticles(Boolean withContent) {
         List<Article> articles = articleMapper.getAllArticles();
-        return fillArticles(articles, with_content);
+        fillArticles(articles, withContent);
+        return articles;
     }
 
     @Override
-    public List<Article> getArticlesByCategoryId(Integer id, Boolean with_content) {
+    public List<Article> getArticlesByCategoryId(Integer id, Boolean withContent) {
         List<Article> articles = articleMapper.getArticlesByCategoryId(id);
-        return fillArticles(articles, with_content);
+        fillArticles(articles, withContent);
+        return articles;
     }
 
     @Override
-    public List<Article> getArticlesByTagId(Integer id, Boolean with_content) {
+    public List<Article> getArticlesByCategoryIdRecursively(int id, boolean withContent) {
+        Category root = categoryMapper.getCategory(id);
+        List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
+        descendants.add(root);
+
+        List<Article> articles = new ArrayList<>();
+        for(Category descendant : descendants) {
+            articles.addAll(getArticlesByCategoryId(descendant.getId(), withContent));
+        }
+
+        return articles;
+    }
+
+    @Override
+    public List<Article> getArticlesByTagId(Integer id, Boolean withContent) {
         List<Article> articles = articleMapper.getArticlesByTagId(id);
-        return fillArticles(articles, with_content);
+        fillArticles(articles, withContent);
+        return articles;
     }
 
     @Override
@@ -84,45 +107,33 @@ public class ArticleServiceImpl implements ArticleService {
         if(!map.isEmpty()) {
             articleMapper.updateArticle(id, map);
         }
+
         return getArticle(id, true);
     }
 
     @Override
     @Transactional
     public Article insertArticle(Map<String, Object> params) {
-        String tags = null;
-        if(params.containsKey("tags")) {
-            tags = String.valueOf(params.get("tags"));
-            params.remove("tags");
-        }
-        List<Map<String, Object>> images = null;
-        if(params.containsKey("images")) {
-            images = (List<Map<String, Object>>)params.get("images");
-            params.remove("images");
-        }
+        String tags = String.valueOf(params.get("tags"));
+        params.remove("tags");
+        List<Map<String, Object>> images = (List<Map<String, Object>>)params.get("images");
+        params.remove("images");
+
         // insert article
         Map<String, Object> map = new HashMap<>();
         map.put("params", params);
         articleMapper.insertArticle(map);
-        Integer id = Integer.parseInt(map.get("id").toString());
+        int id = Integer.parseInt(map.get("id").toString());
+
+        bindTags(id, tags);
+
+        addImages(id, images);
 
         // update article images
-        String old_content = new String((byte[])params.get("content"), StandardCharsets.UTF_8);
-        String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
-        String content = old_content.replaceAll("images/", prefix);
         Map<String, Object> temp = new HashMap<>();
-        temp.put("content", content.getBytes());
+        temp.put("content", params.get("content"));
         articleMapper.updateArticle(id, temp);
 
-        // bind tags
-        if(tags != null) {
-            bindTags(id, tags);
-        }
-
-        // insert images
-        if(images != null) {
-            addImages(id, images);
-        }
         return getArticle(id, true);
     }
 
@@ -136,15 +147,13 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.deleteArticle(id);
     }
 
-    @Override
-    @Transactional
-    public Integer deleteArticleByName(String name) {
-        Article article = articleMapper.getArticleByName(name);
+    //@Override
+    //@Transactional
+    //public Integer deleteArticleByName(String name) {
+    //    Article article = articleMapper.getArticleByName(name);
+    //    return deleteArticle(article.getId());
+    //}
 
-        return deleteArticle(article.getId());
-    }
-
-    /*I'm a lazy boy*/
     @Override
     @Transactional
     public Integer deleteAllArticles() {
@@ -167,6 +176,20 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
+    public int deleteArticlesByCategoryIdRecursively(int id) {
+        Category root = categoryMapper.getCategory(id);
+        List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
+        descendants.add(root);
+
+        int cnt = 0;
+        for(Category descendant : descendants) {
+            cnt += deleteArticlesByCategoryId(descendant.getId());
+        }
+        return cnt;
+    }
+
+    @Override
+    @Transactional
     public Integer deleteArticlesByTagId(Integer id) {
         List<Article> articles = articleMapper.getArticlesByTagId(id);
         for(Article article : articles) {
@@ -175,20 +198,18 @@ public class ArticleServiceImpl implements ArticleService {
         return articles.size();
     }
 
-    private Article fillArticle(Article article, Boolean withContent) {
+    private void fillArticle(Article article, Boolean withContent) {
         if(!withContent) {
             article.setContent(null);
         }
         List<Tag> tags = tagMapper.getTagsByArticleId(article.getId());
         article.setTags(tags);
-        return article;
     }
 
-    private List<Article> fillArticles(List<Article> articles, Boolean with_content) {
+    private void fillArticles(List<Article> articles, Boolean with_content) {
         for (Article article : articles) {
             fillArticle(article, with_content);
         }
-        return articles;
     }
 
     private boolean bindTags(int id, String tags) {
