@@ -11,17 +11,17 @@ import com.devil.blog.entity.Article;
 @Mapper
 @Repository
 public interface ArticleMapper {
-    public Article getArticle(int id);
-    public Article getArticleByName(String name);
+    Article getArticle(int id);
+    Article getArticleByName(String name);
 
-    public List<Article> getAllArticles();
-    public List<Article> getArticlesByCategoryId(int id);
-    public List<Article> getArticlesByTagId(int id);
+    List<Article> getAllArticles();
+    List<Article> getArticlesByCategoryId(int id);
+    List<Article> getArticlesByTagId(int id);
     
-    public boolean updateArticle(int id, Map<String, Object> map);
-    public int insertArticle(Map<String, Object> map);
-    public int deleteArticle(int id);
+    boolean updateArticle(int id, Map<String, Object> map);
+    int insertArticle(Map<String, Object> map);
+    int deleteArticle(int id);
 
-    public int bindTags(int aid, List<Integer> tids);
-    public int unbindTags(int aid);
+    int bindTags(int aid, List<Integer> tids);
+    int unbindTags(int aid);
 }

@@ -11,11 +11,11 @@ import com.devil.blog.entity.Category;
 @Mapper
 @Repository
 public interface CategoryMapper {
-    public Category getCategory(int id);
-    public List<Category> getAllCategories();
-    public List<Category> getDescendantCategories(String path);
+    Category getCategory(int id);
+    List<Category> getAllCategories();
+    List<Category> getDescendantCategories(String path);
 
-    public boolean updateCategory(int id, Map<String, Object> map);
-    public int insertCategory(Map<String, Object> params);
-    public int deleteCategory(int id);
+    boolean updateCategory(int id, Map<String, Object> map);
+    int insertCategory(Map<String, Object> params);
+    int deleteCategory(int id);
 }

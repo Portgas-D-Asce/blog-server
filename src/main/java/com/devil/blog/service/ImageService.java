@@ -6,13 +6,13 @@ package com.devil.blog.service;
 import com.devil.blog.entity.Image;
 
 public interface ImageService {
-    //public Image getImage(int id);
+    //Image getImage(int id);
 
-    public Image getImageByName(String name);
+    Image getImageByName(String name);
 
-    //public List<Image> getAllImages();
+    //List<Image> getAllImages();
 
-    //public Image insertImage(Map<String, Object> params);
+    //Image insertImage(Map<String, Object> params);
 
-    //public int deleteImage(int id);
+    //int deleteImage(int id);
 }

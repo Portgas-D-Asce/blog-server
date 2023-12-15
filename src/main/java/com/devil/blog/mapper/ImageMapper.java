@@ -11,14 +11,14 @@ import com.devil.blog.entity.Image;
 @Mapper
 @Repository
 public interface ImageMapper {
-    public Image getImage(int id);
+    Image getImage(int id);
 
-    public Image getImageByName(String name);
+    Image getImageByName(String name);
 
-    //public List<Image> getAllImages();
+    //List<Image> getAllImages();
 
-    public int insertImage(Map<String, Object> map);
+    int insertImage(Map<String, Object> map);
 
-    //public int deleteImage(int id);
-    public int deleteImagesByArticleId(String id);
+    //int deleteImage(int id);
+    int deleteImagesByArticleId(String id);
 }
