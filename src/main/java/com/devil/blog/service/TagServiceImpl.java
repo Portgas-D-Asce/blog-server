@@ -59,7 +59,7 @@ public class TagServiceImpl implements TagService {
             Map<String, Object> param = new HashMap<>();
             param.put("params", map);
             tagMapper.insertTag(param);
-            int id = Integer.parseInt(map.get("id").toString());
+            int id = Integer.parseInt(param.get("id").toString());
             tags.add(tagMapper.getTag(id));
         }
 
