@@ -39,11 +39,12 @@ public class ArticleServiceImpl implements ArticleService {
         return article;
     }
 
-    //@Override
-    //public Article getArticleByName(String name, Boolean withContent) {
-    //    Article article = articleMapper.getArticleByName(name);
-    //    return fillArticle(article, withContent);
-    //}
+    @Override
+    public Article getArticleByName(String name, Boolean withContent) {
+        Article article = articleMapper.getArticleByName(name);
+        fillArticle(article, withContent);
+        return article;
+    }
 
     @Override
     public List<Article> getAllArticles(Boolean withContent) {

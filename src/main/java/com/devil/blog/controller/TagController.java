@@ -32,6 +32,12 @@ public class TagController {
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
+    @GetMapping("/api/v1/tags")
+    public ResponseEntity<Object> getTag() {
+        List<Tag> tags = tagService.getAllTags();
+        return new ResponseEntity<>(tags, HttpStatus.OK);
+    }
+
     //needn't provid this???
     //@GetMapping("/api/v1/tags")
     //public ResponseEntity<Object> getTags(@RequestParam(required = false) Integer article_id) {

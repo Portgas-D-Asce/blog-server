@@ -9,7 +9,7 @@ import com.devil.blog.entity.Article;
 public interface ArticleService {
     Article getArticle(Integer id, Boolean withContent);
 
-    //Article getArticleByName(String name, Boolean withContent);
+    Article getArticleByName(String name, Boolean withContent);
 
     List<Article> getAllArticles(Boolean withContent);
 

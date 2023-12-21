@@ -40,16 +40,16 @@ public class AritcleController {
 
     @GetMapping("/api/v1/articles")
     public ResponseEntity<Object> getArticles(
-            //@RequestParam(required = false) String article_name,
+            @RequestParam(required = false) String article_name,
             @RequestParam(required = false) Integer category_id,
             @RequestParam(required = false, defaultValue = "false") Boolean recursively,
             @RequestParam(required = false) Integer tag_id,
             @RequestParam(required = false, defaultValue = "false") Boolean with_content) {
 
-        //if(article_name != null) {
-        //    Article article = articleService.getArticleByName(article_name, with_content);
-        //    return new ResponseEntity<>(article, HttpStatus.OK);
-        //}
+        if(article_name != null) {
+            Article article = articleService.getArticleByName(article_name, with_content);
+            return new ResponseEntity<>(article, HttpStatus.OK);
+        }
 
         //currently, nobody has this require
         if(category_id != null && tag_id != null) {
@@ -106,6 +106,8 @@ public class AritcleController {
         Map<String, Object> map = new HashMap<>();
 
         if(article != null) {
+            System.out.println(article.toString());
+            System.out.println("xxx");
             getArticle(map, article);
         }
 
