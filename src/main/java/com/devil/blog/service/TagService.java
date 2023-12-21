@@ -16,10 +16,8 @@ public interface TagService {
     List<Tag> insertTags(List<Map<String, Object>> maps);
 
     Integer deleteTag(Integer id);
-    Integer deleteTagForce(Integer id);
 
     Integer deleteAllTags();
-    Integer deleteAllTagsForce();
 
     List<Map<String, Object>> getTagsStatistics();
 }

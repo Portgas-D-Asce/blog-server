@@ -20,7 +20,4 @@ public interface TagMapper {
     public int deleteTag(int id);
 
     public List<Map<String, Object>> getTagsStatistics();
-
-    public int bindArticles(int tid, List<Integer> aids);
-    public int unbindArticles(int tid);
 }

@@ -74,27 +74,10 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public Integer deleteTagForce(Integer id) {
-        tagMapper.unbindArticles(id);
-        return tagMapper.deleteTag(id);
-    }
-
-    @Override
-    @Transactional
     public Integer deleteAllTags() {
         List<Tag> tags = tagMapper.getAllTags();
         for(Tag tag : tags) {
             deleteTag(tag.getId());
-        }
-        return tags.size();
-    }
-
-    @Override
-    @Transactional
-    public Integer deleteAllTagsForce() {
-        List<Tag> tags = tagMapper.getAllTags();
-        for(Tag tag : tags) {
-            deleteTagForce(tag.getId());
         }
         return tags.size();
     }

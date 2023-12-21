@@ -64,27 +64,15 @@ public class TagController {
     }
 
     @DeleteMapping("/api/v1/tags/{id}")
-    public ResponseEntity<Object> deleteTag(@PathVariable("id") Integer id,
-                                            @RequestParam(required = false) Boolean force) {
-        Integer cnt;
-        if(force != null && force) {
-            cnt = tagService.deleteTagForce(id);
-        } else {
-            cnt = tagService.deleteTag(id);
-        }
+    public ResponseEntity<Object> deleteTag(@PathVariable("id") Integer id) {
+        Integer cnt = tagService.deleteTag(id);
 
         return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/api/v1/tags")
-    public ResponseEntity<Object> deleteTags(@RequestParam(required = false) Boolean force) {
-        Integer cnt;
-
-        if(force != null && force) {
-            cnt = tagService.deleteAllTagsForce();
-        } else {
-            cnt = tagService.deleteAllTags();
-        }
+    public ResponseEntity<Object> deleteTags() {
+        Integer cnt = tagService.deleteAllTags();
 
         return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }

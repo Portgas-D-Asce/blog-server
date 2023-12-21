@@ -45,15 +45,4 @@
         tag.id=bind.tid
         group by tag.id
     </select>
-
-    <insert id="bindArticles">
-        insert into bind(tid, aid) values
-        <foreach collection="aids" item="aid" index="index">
-            <if test="index!=0">,</if> (#{tid}, #{aid})
-        </foreach>
-    </insert>
-
-    <delete id="unbindArticles">
-        delete from bind where tid = #{tid}
-    </delete>
 </mapper>
