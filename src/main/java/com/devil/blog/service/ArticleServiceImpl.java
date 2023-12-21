@@ -132,7 +132,7 @@ public class ArticleServiceImpl implements ArticleService {
         // update article images
         Map<String, Object> temp = new HashMap<>();
         temp.put("content", params.get("content"));
-        articleMapper.updateArticle(id, temp);
+        updateArticle(id, temp);
 
         return getArticle(id, true);
     }
