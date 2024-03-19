@@ -14,17 +14,12 @@
 	<name>blog</name>
 	<!--<packaging>war</packaging>-->
 	<description>Demo project for Spring Boot</description>
-	<properties>
-		<java.version>8</java.version>
-	</properties>
 	<dependencies>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.30</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
