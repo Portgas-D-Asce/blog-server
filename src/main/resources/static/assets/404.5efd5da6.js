@@ -1,1 +1,0 @@
-import{_}from"./_plugin-vue_export-helper.cdc0426e.js";import{o as e,c}from"./index.6e769267.js";const o={},t={class:"bg wh100"};function s(n,r){return e(),c("div",t)}const p=_(o,[["render",s],["__scopeId","data-v-1c588458"]]);export{p as default};
