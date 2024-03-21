@@ -88,12 +88,12 @@ public class AritcleController {
        return items;
    }
 
-    @PutMapping("/api/v1/articles/{id}")
+    @PutMapping("/api/v1/articles/{name}")
     public ResponseEntity<Object> updateArticle(
-            @PathVariable("id") Integer id,
+            @PathVariable("name") String name,
             @RequestParam(value = "article", required = false) MultipartFile article,
             @RequestParam(value = "images", required = false) List<MultipartFile> images,
-            @RequestParam(value = "cid", required = false) Integer cid,
+            @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "tags", required = false) String tags,
             @RequestParam(value = "description", required = false) String description) throws IOException {
         Map<String, Object> map = new HashMap<>();
@@ -106,8 +106,8 @@ public class AritcleController {
             map.put("images", getImages(images));
         }
 
-        if(cid != null) {
-            map.put("cid", cid);
+        if(category != null) {
+            map.put("category", category);
         }
 
         if(description != null) {
@@ -118,7 +118,7 @@ public class AritcleController {
             map.put("tags", tags);
         }
 
-        Article res = articleService.updateArticle(id, map);
+        Article res = articleService.updateArticle(name, map);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
@@ -126,7 +126,7 @@ public class AritcleController {
     public ResponseEntity<Object> insertArticle(
             @RequestParam(value = "article") MultipartFile article,
             @RequestParam(value = "images") List<MultipartFile> images,
-            @RequestParam(value = "cid") Integer cid,
+            @RequestParam(value = "category") String category,
             @RequestParam(value = "tags") String tags,
             @RequestParam(value = "description", required = false) String description) throws IOException {
         Map<String, Object> map = new HashMap<>();
@@ -135,7 +135,7 @@ public class AritcleController {
 
         map.put("images", getImages(images));
 
-        map.put("cid", cid);
+        map.put("category", category);
 
         map.put("tags", tags);
 

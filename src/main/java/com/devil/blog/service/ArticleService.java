@@ -19,6 +19,7 @@ public interface ArticleService {
     List<Article> getTagArticles(String name, Boolean withContent);
 
     Article updateArticle(Integer id, Map<String, Object> map);
+    Article updateArticle(String name, Map<String, Object> map);
 
     Article insertArticle(Map<String, Object> params);
 

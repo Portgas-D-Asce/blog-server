@@ -116,6 +116,13 @@ public class ArticleServiceImpl implements ArticleService {
             map.put("content", content.getBytes());
         }
 
+        if(map.containsKey("category")) {
+            String category_name = String.valueOf(map.get("category"));
+            map.remove("category");
+            Category category = categoryMapper.getCategoryByName(category_name);
+            map.put("cid", category.getId());
+        }
+
         if(!map.isEmpty()) {
             articleMapper.updateArticle(id, map);
         }
@@ -125,11 +132,23 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
+    public Article updateArticle(String name, Map<String, Object> map) {
+        Article article = articleMapper.getArticleByName(name);
+        return updateArticle(article.getId(), map);
+    }
+
+    @Override
+    @Transactional
     public Article insertArticle(Map<String, Object> params) {
         String tags = String.valueOf(params.get("tags"));
         params.remove("tags");
         List<Map<String, Object>> images = (List<Map<String, Object>>)params.get("images");
         params.remove("images");
+
+        String category_name = String.valueOf(params.get("category"));
+        Category category = categoryMapper.getCategoryByName(category_name);
+        params.remove("category");
+        params.put("cid", category.getId());
 
         // insert article
         Map<String, Object> map = new HashMap<>();
@@ -148,7 +167,6 @@ public class ArticleServiceImpl implements ArticleService {
 
         return getArticle(id, true);
     }
-
 
     @Override
     @Transactional
@@ -240,13 +258,14 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private boolean bindTags(int id, String tags) {
-        List<Integer> tag_ids = new ArrayList<>();
-        String items[] = tags.split(",");
-        for (String item : items) {
-            tag_ids.add(Integer.parseInt(item));
+        List<Integer> tagIds = new ArrayList<>();
+        String[] names = tags.split(",");
+        for (String name : names) {
+            Tag tag = tagMapper.getTagByName(name);
+            tagIds.add(tag.getId());
         }
         articleMapper.unbindTags(id);
-        articleMapper.bindTags(id, tag_ids);
+        articleMapper.bindTags(id, tagIds);
         return true;
     }
 
