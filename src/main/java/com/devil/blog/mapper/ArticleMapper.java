@@ -13,14 +13,15 @@ import com.devil.blog.entity.Article;
 public interface ArticleMapper {
     Article getArticle(int id);
     Article getArticleByName(String name);
-
-    List<Article> getAllArticles();
+    List<Article> getArticles();
     List<Article> getArticlesByCategoryId(int id);
     List<Article> getArticlesByTagId(int id);
     
     boolean updateArticle(int id, Map<String, Object> map);
     int insertArticle(Map<String, Object> map);
+
     int deleteArticle(int id);
+    int deleteArticleByName(String name);
 
     int bindTags(int aid, List<Integer> tids);
     int unbindTags(int aid);

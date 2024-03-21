@@ -15,13 +15,13 @@ public class ImageServiceImpl implements ImageService {
     @Autowired
     private ImageMapper imageMapper;
     
-    //@Override
-    //public Image getImage(int id) {
-    //    return imageMapper.getImage(id);
-    //}
+    @Override
+    public Image getImage(int id) {
+        return imageMapper.getImage(id);
+    }
 
     @Override
-    public Image getImageByName(String name) {
+    public Image getImage(String name) {
         return imageMapper.getImageByName(name);
     }
 
@@ -43,8 +43,13 @@ public class ImageServiceImpl implements ImageService {
     //    return image;
     //}
 
-    //@Override
-    //public int deleteImage(int id) {
-    //    return imageMapper.deleteImage(id);
-    //}
+    @Override
+    public int deleteImage(int id) {
+        return imageMapper.deleteImage(id);
+    }
+
+    @Override
+    public int deleteImage(String name) {
+        return imageMapper.deleteImageByName(name);
+    }
 }

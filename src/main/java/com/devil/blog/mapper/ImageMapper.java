@@ -12,13 +12,14 @@ import com.devil.blog.entity.Image;
 @Repository
 public interface ImageMapper {
     Image getImage(int id);
-
     Image getImageByName(String name);
 
     //List<Image> getAllImages();
 
     int insertImage(Map<String, Object> map);
 
-    //int deleteImage(int id);
+    int deleteImage(int id);
+
+    int deleteImageByName(String name);
     int deleteImagesByArticleId(String id);
 }

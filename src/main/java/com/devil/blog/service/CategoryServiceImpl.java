@@ -29,7 +29,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryTree(int id) {
+    public Category getCategory(String name) {
+        Category category = categoryMapper.getCategoryByName(name);
+        category.setChildren(new ArrayList<>());
+        return category;
+    }
+
+    @Override
+    public Category getCategoryRecursively(int id) {
         Category root = getCategory(id);
         // had sorted at sql query
         List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
@@ -45,6 +52,12 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         return root;
+    }
+
+    @Override
+    public Category getCategoryRecursively(String name) {
+        Category root = getCategory(name);
+        return getCategoryRecursively(root.getId());
     }
 
     //@Override
@@ -86,7 +99,7 @@ public class CategoryServiceImpl implements CategoryService {
                 que.add(child);
             }
         }
-        return getCategoryTree(pid);
+        return getCategoryRecursively(pid);
     }
 
     @Override
@@ -95,8 +108,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public int deleteCategory(String name) {
+        return categoryMapper.deleteCategoryByName(name);
+    }
+
+    @Override
     @Transactional
-    public int deleteCategoryTree(int id) {
+    public int deleteCategoryRecursively(int id) {
         Category root = getCategory(id);
         // had sorted at sql query
         List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
@@ -110,5 +128,12 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         return descendants.size();
+    }
+
+    @Override
+    @Transactional
+    public int deleteCategoryRecursively(String name) {
+        Category root = getCategory(name);
+        return deleteCategoryRecursively(root.getId());
     }
 }

@@ -30,45 +30,38 @@ public class AritcleController {
     @Autowired
     private ArticleService articleService = new ArticleServiceImpl();
 
-    @GetMapping("/api/v1/articles/{id}")
+    @GetMapping("/api/v1/articles/{name}")
     public ResponseEntity<Object> getArticle(
-            @PathVariable("id") Integer id,
-            @RequestParam(required = false, defaultValue = "false") Boolean with_content) {
-        Article article = articleService.getArticle(id, with_content);
+            @PathVariable("name") String name,
+            @RequestParam(required = false, defaultValue = "false") Boolean withContent) {
+        Article article = articleService.getArticle(name, withContent);
         return new ResponseEntity<>(article, HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/articles")
     public ResponseEntity<Object> getArticles(
-            @RequestParam(required = false) String article_name,
-            @RequestParam(required = false) Integer category_id,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false, defaultValue = "false") Boolean recursively,
-            @RequestParam(required = false) Integer tag_id,
-            @RequestParam(required = false, defaultValue = "false") Boolean with_content) {
-
-        if(article_name != null) {
-            Article article = articleService.getArticleByName(article_name, with_content);
-            return new ResponseEntity<>(article, HttpStatus.OK);
-        }
-
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false, defaultValue = "false") Boolean content) {
         //currently, nobody has this require
-        if(category_id != null && tag_id != null) {
+        if(category != null && tag != null) {
             Error error = new Error(800,"categoryId and tagId are conflict!",
                     "you can only choose one of them.");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
         List<Article> articles;
-        if(tag_id != null) {
-            articles = articleService.getArticlesByTagId(tag_id, with_content);
-        } else if(category_id != null) {
+        if(tag != null) {
+            articles = articleService.getTagArticles(tag, content);
+        } else if(category != null) {
             if(recursively) {
-                articles = articleService.getArticlesByCategoryIdRecursively(category_id, with_content);
+                articles = articleService.getCategoryArticlesRecursively(category, content);
             } else {
-                articles = articleService.getArticlesByCategoryId(category_id, with_content);
+                articles = articleService.getCategoryArticles(category, content);
             }
         } else {
-            articles = articleService.getAllArticles(with_content);
+            articles = articleService.getArticles(content);
         }
 
         return new ResponseEntity<>(articles, HttpStatus.OK);
@@ -106,8 +99,6 @@ public class AritcleController {
         Map<String, Object> map = new HashMap<>();
 
         if(article != null) {
-            System.out.println(article.toString());
-            System.out.println("xxx");
             getArticle(map, article);
         }
 
@@ -147,7 +138,7 @@ public class AritcleController {
         map.put("cid", cid);
 
         map.put("tags", tags);
-     
+
         if(description != null) {
             map.put("description", description);
         }
@@ -156,40 +147,35 @@ public class AritcleController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/v1/articles/{id}")
-    public ResponseEntity<Object> deleteArticle(@PathVariable("id") Integer id) {
-        Integer cnt = articleService.deleteArticle(id);
+    @DeleteMapping("/api/v1/articles/{name}")
+    public ResponseEntity<Object> deleteArticle(@PathVariable("name") String name) {
+        Integer cnt = articleService.deleteArticle(name);
         return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/api/v1/articles")
     public ResponseEntity<Object> deleteArticles(
-            //@RequestParam(required = false) String article_name,
-            @RequestParam(required = false) Integer category_id,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false, defaultValue = "false") Boolean recursively,
-            @RequestParam(required = false) Integer tag_id) {
-        //if(article_name != null) {
-        //    Integer cnt = articleService.deleteArticleByName(article_name);
-        //    return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
-        //}
+            @RequestParam(required = false) String tag) {
 
-        if(category_id != null && tag_id != null) {
+        if(category != null && tag != null) {
             Error error = new Error(800,"categoryId and tagId are conflict!",
                     "you can only choose one of them.");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
         int cnt;
-        if(tag_id != null) {
-            cnt = articleService.deleteArticlesByTagId(tag_id);
-        } else if(category_id != null) {
+        if(tag != null) {
+            cnt = articleService.deleteTagArticles(tag);
+        } else if(category != null) {
             if(recursively) {
-                cnt = articleService.deleteArticlesByCategoryIdRecursively(category_id);
+                cnt = articleService.deleteCategoryArticlesRecursively(category);
             } else {
-                cnt = articleService.deleteArticlesByCategoryId(category_id);
+                cnt = articleService.deleteCategoryArticles(category);
             }
         } else {
-            cnt = articleService.deleteAllArticles();
+            cnt = articleService.deleteArticles();
         }
 
         return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);

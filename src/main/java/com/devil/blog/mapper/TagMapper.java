@@ -11,13 +11,16 @@ import com.devil.blog.entity.Tag;
 @Mapper
 @Repository
 public interface TagMapper {
-    public Tag getTag(int id);
-    public List<Tag> getAllTags();
-    public List<Tag> getTagsByArticleId(int article_id);
+    Tag getTag(int id);
+    Tag getTagByName(String name);
+    List<Tag> getTags();
+    List<Tag> getTagsByArticleId(int article_id);
 
-    public boolean updateTag(int id, Map<String, Object> map);
-    public int insertTag(Map<String, Object> map);
-    public int deleteTag(int id);
+    boolean updateTag(int id, Map<String, Object> map);
+    int insertTag(Map<String, Object> map);
 
-    public List<Map<String, Object>> getTagsStatistics();
+    int deleteTag(int id);
+    int deleteTagByName(String name);
+
+    List<Map<String, Object>> getStatistics();
 }

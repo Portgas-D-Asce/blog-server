@@ -24,16 +24,15 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService = new CategoryServiceImpl();
 
-    @GetMapping("/api/v1/categories/{id}")
+    @GetMapping("/api/v1/categories/{name}")
     public ResponseEntity<Object> getCategory(
-            @PathVariable("id") Integer id,
+            @PathVariable("name") String name,
             @RequestParam(required = false, defaultValue = "false") Boolean recursively) {
-
         Category category;
         if(recursively) {
-            category = categoryService.getCategoryTree(id);
+            category = categoryService.getCategoryRecursively(name);
         } else {
-            category = categoryService.getCategory(id);
+            category = categoryService.getCategory(name);
         }
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
@@ -52,15 +51,15 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/v1/categories/{id}")
+    @DeleteMapping("/api/v1/categories/{name}")
     public ResponseEntity<Object> deleteCategory(
-            @PathVariable("id") Integer id,
+            @PathVariable("name") String name,
             @RequestParam(required = false, defaultValue = "false") Boolean recursively) {
         int cnt;
         if(recursively) {
-            cnt = categoryService.deleteCategoryTree(id);
+            cnt = categoryService.deleteCategoryRecursively(name);
         } else {
-            cnt = categoryService.deleteCategory(id);
+            cnt = categoryService.deleteCategory(name);
         }
         return new ResponseEntity<>(cnt, HttpStatus.NO_CONTENT);
     }

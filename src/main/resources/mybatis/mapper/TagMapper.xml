@@ -7,7 +7,11 @@
         select * from tag where id = #{id}
     </select>
 
-    <select id="getAllTags" resultType="Tag">
+    <select id="getTagByName" resultType="Tag">
+        select * from tag where name = #{name}
+    </select>
+
+    <select id="getTags" resultType="Tag">
         select * from tag
     </select>
 
@@ -40,7 +44,11 @@
         delete from tag where id = #{id}
     </delete>
 
-    <select id="getTagsStatistics" resultType="Map">
+    <delete id="deleteTagByName">
+        delete from tag where name = #{name}
+    </delete>
+
+    <select id="getStatistics" resultType="Map">
         select tag.*, count(*) as value from tag inner join bind on
         tag.id=bind.tid
         group by tag.id

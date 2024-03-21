@@ -7,7 +7,9 @@ import com.devil.blog.entity.Tag;
 
 public interface TagService {
     Tag getTag(Integer id);
-    List<Tag> getAllTags();
+    Tag getTag(String name);
+    List<Tag> getTags();
+
     List<Tag> getTagsByArticleId(Integer article_id);
 
     Tag updateTag(Integer id, Map<String, Object> map);
@@ -16,8 +18,8 @@ public interface TagService {
     List<Tag> insertTags(List<Map<String, Object>> maps);
 
     Integer deleteTag(Integer id);
+    Integer deleteTag(String name);
+    Integer deleteTags();
 
-    Integer deleteAllTags();
-
-    List<Map<String, Object>> getTagsStatistics();
+    List<Map<String, Object>> getStatistics();
 }

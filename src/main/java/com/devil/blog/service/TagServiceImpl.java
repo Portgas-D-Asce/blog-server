@@ -23,8 +23,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getAllTags() {
-        return tagMapper.getAllTags();
+    public Tag getTag(String name) {
+        return tagMapper.getTagByName(name);
+    }
+
+    @Override
+    public List<Tag> getTags() {
+        return tagMapper.getTags();
     }
 
     @Override
@@ -74,8 +79,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public Integer deleteAllTags() {
-        List<Tag> tags = tagMapper.getAllTags();
+    public Integer deleteTag(String name) {
+        return tagMapper.deleteTagByName(name);
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteTags() {
+        List<Tag> tags = tagMapper.getTags();
         for(Tag tag : tags) {
             deleteTag(tag.getId());
         }
@@ -83,7 +94,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Map<String, Object>> getTagsStatistics() {
-        return tagMapper.getTagsStatistics();
+    public List<Map<String, Object>> getStatistics() {
+        return tagMapper.getStatistics();
     }
 }

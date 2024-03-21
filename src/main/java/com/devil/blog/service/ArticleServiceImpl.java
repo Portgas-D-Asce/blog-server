@@ -40,45 +40,56 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Article getArticleByName(String name, Boolean withContent) {
+    public Article getArticle(String name, Boolean withContent) {
         Article article = articleMapper.getArticleByName(name);
         fillArticle(article, withContent);
         return article;
     }
 
     @Override
-    public List<Article> getAllArticles(Boolean withContent) {
-        List<Article> articles = articleMapper.getAllArticles();
+    public List<Article> getArticles(Boolean withContent) {
+        List<Article> articles = articleMapper.getArticles();
         fillArticles(articles, withContent);
         return articles;
     }
 
-    @Override
-    public List<Article> getArticlesByCategoryId(Integer id, Boolean withContent) {
+    public List<Article> getCategoryArticles(int id, Boolean withContent) {
         List<Article> articles = articleMapper.getArticlesByCategoryId(id);
         fillArticles(articles, withContent);
         return articles;
     }
 
     @Override
-    public List<Article> getArticlesByCategoryIdRecursively(int id, boolean withContent) {
-        Category root = categoryMapper.getCategory(id);
+    public List<Article> getCategoryArticles(String name, Boolean withContent) {
+        Category category = categoryMapper.getCategoryByName(name);
+        return getCategoryArticles(category.getId(), withContent);
+    }
+
+    @Override
+    public List<Article> getCategoryArticlesRecursively(String name, boolean withContent) {
+        Category root = categoryMapper.getCategoryByName(name);
         List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
         descendants.add(root);
 
         List<Article> articles = new ArrayList<>();
         for(Category descendant : descendants) {
-            articles.addAll(getArticlesByCategoryId(descendant.getId(), withContent));
+            articles.addAll(getCategoryArticles(descendant.getId(), withContent));
         }
 
         return articles;
     }
 
     @Override
-    public List<Article> getArticlesByTagId(Integer id, Boolean withContent) {
+    public List<Article> getTagArticles(int id, Boolean withContent) {
         List<Article> articles = articleMapper.getArticlesByTagId(id);
         fillArticles(articles, withContent);
         return articles;
+    }
+
+    @Override
+    public List<Article> getTagArticles(String name, Boolean withContent) {
+        Tag tag = tagMapper.getTagByName(name);
+        return getTagArticles(tag.getId(), withContent);
     }
 
     @Override
@@ -138,9 +149,10 @@ public class ArticleServiceImpl implements ArticleService {
         return getArticle(id, true);
     }
 
+
     @Override
     @Transactional
-    public Integer deleteArticle(Integer id) {
+    public Integer deleteArticle(int id) {
         articleMapper.unbindTags(id);
 
         imageMapper.deleteImagesByArticleId(id + "-");
@@ -148,17 +160,17 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.deleteArticle(id);
     }
 
-    //@Override
-    //@Transactional
-    //public Integer deleteArticleByName(String name) {
-    //    Article article = articleMapper.getArticleByName(name);
-    //    return deleteArticle(article.getId());
-    //}
+    @Override
+    @Transactional
+    public Integer deleteArticle(String name) {
+        Article article = articleMapper.getArticleByName(name);
+        return deleteArticle(article.getId());
+    }
 
     @Override
     @Transactional
-    public Integer deleteAllArticles() {
-        List<Article> articles = articleMapper.getAllArticles();
+    public Integer deleteArticles() {
+        List<Article> articles = articleMapper.getArticles();
         for(Article article : articles) {
             deleteArticle(article.getId());
         }
@@ -167,7 +179,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Integer deleteArticlesByCategoryId(Integer id) {
+    public Integer deleteCategoryArticles(int id) {
         List<Article> articles = articleMapper.getArticlesByCategoryId(id);
         for(Article article : articles) {
             deleteArticle(article.getId());
@@ -177,26 +189,40 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public int deleteArticlesByCategoryIdRecursively(int id) {
-        Category root = categoryMapper.getCategory(id);
+    public Integer deleteCategoryArticles(String name) {
+        Category category = categoryMapper.getCategoryByName(name);
+        return deleteCategoryArticles(category.getId());
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteCategoryArticlesRecursively(String name) {
+        Category root = categoryMapper.getCategoryByName(name);
         List<Category> descendants = categoryMapper.getDescendantCategories(root.relPath());
         descendants.add(root);
 
         int cnt = 0;
         for(Category descendant : descendants) {
-            cnt += deleteArticlesByCategoryId(descendant.getId());
+            cnt += deleteCategoryArticles(descendant.getId());
         }
         return cnt;
     }
 
     @Override
     @Transactional
-    public Integer deleteArticlesByTagId(Integer id) {
+    public Integer deleteTagArticles(int id) {
         List<Article> articles = articleMapper.getArticlesByTagId(id);
         for(Article article : articles) {
             deleteArticle(article.getId());
         }
         return articles.size();
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteTagArticles(String name) {
+        Tag tag = tagMapper.getTagByName(name);
+        return deleteTagArticles(tag.getId());
     }
 
     private void fillArticle(Article article, Boolean withContent) {

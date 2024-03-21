@@ -6,12 +6,16 @@ import com.devil.blog.entity.Category;
 
 public interface CategoryService {
     Category getCategory(int id);
-    Category getCategoryTree(int id);
+    Category getCategory(String name);
+    Category getCategoryRecursively(int id);
+    Category getCategoryRecursively(String name);
 
     //boolean updateCategoryRecursively(int id, Map<String, Object> map);
 
     Category insertCategoryTree(int pid, Map<String, Object> params);
 
     int deleteCategory(int id);
-    int deleteCategoryTree(int id);
+    int deleteCategory(String name);
+    int deleteCategoryRecursively(int id);
+    int deleteCategoryRecursively(String name);
 }

@@ -12,10 +12,12 @@ import com.devil.blog.entity.Category;
 @Repository
 public interface CategoryMapper {
     Category getCategory(int id);
-    List<Category> getAllCategories();
+    Category getCategoryByName(String name);
     List<Category> getDescendantCategories(String path);
 
     boolean updateCategory(int id, Map<String, Object> map);
     int insertCategory(Map<String, Object> params);
+
     int deleteCategory(int id);
+    int deleteCategoryByName(String name);
 }

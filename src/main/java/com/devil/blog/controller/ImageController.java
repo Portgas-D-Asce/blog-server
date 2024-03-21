@@ -42,7 +42,7 @@ public class ImageController {
     @GetMapping("/api/v1/images")
     public ResponseEntity<Object> getContent(@RequestParam String name,
                                              @RequestParam(required = false) Integer ratio) throws IOException {
-        Image image = imageService.getImageByName(name);
+        Image image = imageService.getImage(name);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
 

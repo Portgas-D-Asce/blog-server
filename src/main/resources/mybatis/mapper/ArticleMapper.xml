@@ -11,7 +11,7 @@
         select * from article where name = #{name}
     </select>
 
-    <select id="getAllArticles" resultType="Article">
+    <select id="getArticles" resultType="Article">
         select * from article
     </select>
 
@@ -47,6 +47,10 @@
 
     <delete id="deleteArticle">
         delete from article where id = #{id}
+    </delete>
+
+    <delete id="deleteArticleByName">
+        delete from article where name = #{name}
     </delete>
 
     <insert id="bindTags">
