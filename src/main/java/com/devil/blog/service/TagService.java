@@ -13,6 +13,7 @@ public interface TagService {
     List<Tag> getTagsByArticleId(Integer article_id);
 
     Tag updateTag(Integer id, Map<String, Object> map);
+    Tag updateTag(String name, Map<String, Object> map);
     List<Tag> updateTags(List<Map<String, Object>> maps);
 
     List<Tag> insertTags(List<Map<String, Object>> maps);

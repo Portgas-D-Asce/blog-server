@@ -44,14 +44,18 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Tag updateTag(String name, Map<String, Object> map) {
+        Tag tag = tagMapper.getTagByName(name);
+        return updateTag(tag.getId(), map);
+    }
+
+    @Override
     @Transactional
     public List<Tag> updateTags(List<Map<String, Object>> maps) {
         List<Tag> tags = new ArrayList<>();
         for(Map<String, Object> map : maps) {
-            int id = Integer.parseInt(map.get("id").toString());
-            map.remove("id");
-            tagMapper.updateTag(id, map);
-            tags.add(tagMapper.getTag(id));
+            String name = String.valueOf(map.get("name"));
+            tags.add(updateTag(name, map));
         }
         return tags;
     }

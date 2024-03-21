@@ -50,9 +50,9 @@ public class TagController {
     //}
 
     @PutMapping("/api/v1/tags/{name}")
-    public ResponseEntity<Object> updateTag(@PathVariable("name") Integer id,
+    public ResponseEntity<Object> updateTag(@PathVariable("name") String name,
                                             @RequestBody Map<String, Object> map) {
-        Tag tag = tagService.updateTag(id, map);
+        Tag tag = tagService.updateTag(name, map);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
