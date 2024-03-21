@@ -12,7 +12,9 @@ public interface CategoryService {
 
     //boolean updateCategoryRecursively(int id, Map<String, Object> map);
 
-    Category insertCategoryTree(int pid, Map<String, Object> params);
+    Category insertCategoryRecursively(int pid, Map<String, Object> params);
+
+    Category insertCategoryRecursively(String name, Map<String, Object> params);
 
     int deleteCategory(int id);
     int deleteCategory(String name);
