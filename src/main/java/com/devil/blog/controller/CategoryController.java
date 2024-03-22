@@ -37,12 +37,6 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    /*todo 要不要支持修改，如何修改？
-    @PutMapping("/api/v1/categories/{id}")
-    public boolean updateCategory(@PathVariable("id") Integer id, @RequestBody Map<String, Object> map) {
-        return categoryService.updateCategoryRecursively(id, map);
-    }*/
-
     @PostMapping("/api/v1/categories")
     public ResponseEntity<Object> insertCategory(
             @RequestParam(required = false, defaultValue = "Home") String name,
