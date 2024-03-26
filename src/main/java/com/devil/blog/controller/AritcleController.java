@@ -74,6 +74,8 @@ public class AritcleController {
        System.out.println(new String(article.getBytes()));
        System.out.println(new String(article.getBytes(), StandardCharsets.UTF_8));
        System.out.println(new String(article.getBytes(), StandardCharsets.US_ASCII));
+       System.out.println(new String(article.getBytes(), StandardCharsets.ISO_8859_1));
+       System.out.println(new String(article.getBytes(), StandardCharsets.UTF_16));
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));
