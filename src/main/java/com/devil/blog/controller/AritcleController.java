@@ -72,7 +72,7 @@ public class AritcleController {
        map.put("content", article.getBytes());
        System.out.println(Charset.defaultCharset());
        System.out.println(new String(article.getBytes()));
-       System.out.println(new String(article.getBytes(), StandardCharsets.UTF_8));
+       System.out.println(new String(Base64.getDecoder().decode(article.getBytes()), StandardCharsets.UTF_8));
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));
