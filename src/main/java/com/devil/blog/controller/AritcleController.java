@@ -1,6 +1,8 @@
 package com.devil.blog.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -69,12 +71,9 @@ public class AritcleController {
    private void getArticle(Map<String, Object> map, MultipartFile article) throws IOException {
        map.put("content", article.getBytes());
        System.out.println(Charset.defaultCharset());
-       System.out.println(article.getResource());
-       System.out.println(new String(article.getBytes()));
-       System.out.println("aaaa");
-       System.out.println(new String(article.getBytes(), StandardCharsets.UTF_8));
-       System.out.println(Charset.defaultCharset());
-       System.out.println(new String(article.getBytes(), StandardCharsets.ISO_8859_1));
+       System.out.println(System.getProperty("file.encoding"));
+       OutputStreamWriter writer = new OutputStreamWriter(new ByteArrayOutputStream());
+       System.out.println(writer.getEncoding());
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));
