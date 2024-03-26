@@ -1,10 +1,7 @@
 package com.devil.blog.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,6 +66,7 @@ public class AritcleController {
 
    private void getArticle(Map<String, Object> map, MultipartFile article) throws IOException {
        map.put("content", article.getBytes());
+       System.out.println(Arrays.toString(article.getBytes()));
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));
