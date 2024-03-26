@@ -39,7 +39,7 @@ public class CategoryController {
 
     @PostMapping("/api/v1/categories")
     public ResponseEntity<Object> insertCategory(
-            @RequestParam(required = false, defaultValue = "Home") String name,
+            @RequestParam(required = false, defaultValue = "Root") String name,
             @RequestBody Map<String, Object> map) {
         Category category = categoryService.insertCategoryRecursively(name, map);
         return new ResponseEntity<>(category, HttpStatus.OK);
