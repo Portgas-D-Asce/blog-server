@@ -1,6 +1,7 @@
 package com.devil.blog.controller;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,9 @@ public class AritcleController {
        System.out.println(article.getResource());
        System.out.println(new String(article.getBytes()));
        System.out.println("aaaa");
-       System.out.println(article.getContentType());
+       System.out.println(new String(article.getBytes(), StandardCharsets.UTF_8));
+
+       System.out.println(new String(article.getBytes(), StandardCharsets.ISO_8859_1));
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));

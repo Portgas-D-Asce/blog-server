@@ -116,8 +116,6 @@ public class ArticleServiceImpl implements ArticleService {
             //String prefix = "https://www.xdevil.top:8080/blog/api/v1/images?name=" + id.toString() + "-";
             String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
             String content = old_content.replaceAll("images/", prefix);
-            System.out.println("yyyy");
-            System.out.println(content);
             map.put("content", content.getBytes());
         }
 
@@ -165,13 +163,6 @@ public class ArticleServiceImpl implements ArticleService {
 
         addImages(id, images);
 
-        String w_content = new String((byte[])params.get("content"), StandardCharsets.ISO_8859_1);
-        System.out.println("wwww");
-        System.out.println(w_content);
-
-        String param_content = new String((byte[])params.get("content"), StandardCharsets.UTF_8);
-        System.out.println("zzzz");
-        System.out.println(param_content);
         // update article images
         Map<String, Object> temp = new HashMap<>();
         temp.put("content", params.get("content"));
