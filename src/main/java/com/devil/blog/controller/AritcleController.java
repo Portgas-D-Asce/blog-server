@@ -71,9 +71,7 @@ public class AritcleController {
    private void getArticle(Map<String, Object> map, MultipartFile article) throws IOException {
        map.put("content", article.getBytes());
        System.out.println(Charset.defaultCharset());
-       System.out.println(System.getProperty("file.encoding"));
-       OutputStreamWriter writer = new OutputStreamWriter(new ByteArrayOutputStream());
-       System.out.println(writer.getEncoding());
+       System.out.println(new String(article.getBytes(), StandardCharsets.UTF_8));
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));
