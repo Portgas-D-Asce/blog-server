@@ -1,7 +1,6 @@
 package com.devil.blog.controller;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -68,7 +67,7 @@ public class AritcleController {
 
    private void getArticle(Map<String, Object> map, MultipartFile article) throws IOException {
        map.put("content", article.getBytes());
-       System.out.println(Charset.defaultCharset());
+       //System.out.println(Charset.defaultCharset());
        System.out.println(new String(article.getBytes()));
        System.out.println(new String(article.getBytes(), StandardCharsets.UTF_8));
        String name = article.getOriginalFilename();
