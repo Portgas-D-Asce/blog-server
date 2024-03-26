@@ -111,8 +111,8 @@ public class ArticleServiceImpl implements ArticleService {
 
         if(map.containsKey("content")) {
             String old_content = new String((byte[])map.get("content"), StandardCharsets.UTF_8);
-            //String prefix = "https://www.xdevil.top:8080/blog/api/v1/images?name=" + id.toString() + "-";
-            String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
+            String prefix = "https://www.xdevil.top:8080/blog/api/v1/images?name=" + id.toString() + "-";
+            //String prefix = "/blog/api/v1/images?name=" + id.toString() + "-";
             String content = old_content.replaceAll("images/", prefix);
             map.put("content", content.getBytes());
         }
