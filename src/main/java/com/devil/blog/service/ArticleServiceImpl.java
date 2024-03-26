@@ -165,7 +165,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         addImages(id, images);
 
-        String w_content = new String((byte[])params.get("content"));
+        String w_content = new String((byte[])params.get("content"), StandardCharsets.ISO_8859_1);
         System.out.println("wwww");
         System.out.println(w_content);
 

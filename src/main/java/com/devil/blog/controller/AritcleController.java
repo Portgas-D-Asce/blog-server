@@ -66,7 +66,9 @@ public class AritcleController {
 
    private void getArticle(Map<String, Object> map, MultipartFile article) throws IOException {
        map.put("content", article.getBytes());
-       System.out.println(Arrays.toString(article.getBytes()));
+       System.out.println(article.getBytes());
+       System.out.println("aaaa");
+       System.out.println(article.getContentType());
        String name = article.getOriginalFilename();
        if(name != null && !name.isEmpty()) {
            name = name.substring(0, name.lastIndexOf("."));
